@@ -1,6 +1,128 @@
-<mvc:View controllerName="sapui5task2.controller.Main"
+<mvc:View
+    controllerName="sapui5task2.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
+    xmlns="sap.m"
+>
+    <Page
+        id="page"
+        title="{i18n>title}"
+    >
+        <content>
+            <Table
+                id="booksTable"
+                items="{
+                    path: '/books'
+                }"
+                growing="true"
+                growingThreshold="10"
+            >
+                <headerToolbar>
+                    <OverflowToolbar id="books_table_Toolbar">
+                        <Title
+                            id="books_counter_title"
+                            text="Books ({= ${/books}.length })"
+                            level="H2"
+                        />
+                        <Button
+                            id="add_book_button"
+                            icon="sap-icon://add"
+                            text="Add Record"
+                            press=".onAddBook"
+                        />
+                        <Button
+                            id="delete_book_button"
+                            icon="sap-icon://delete"
+                            text="Delete Record"
+                            press=".onDeleteBook"
+                        />
+                        <ToolbarSpacer id="book_table_toolbar_spacer" />
+                        <Input
+                            id="search_book_input"
+                            width="20rem"
+                            placeholder="Filter books by Title..."
+                            submit=".onFilterByTitle"
+                        />
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column id="book_id_column">
+                        <Text
+                            id="book_id_column_text"
+                            text="ID"
+                        />
+                    </Column>
+                    <Column id="book_name_column">
+                        <Text
+                            id="book_name_column_text"
+                            text="Book Name"
+                        />
+                    </Column>
+                    <Column id="book_author_column">
+                        <Text
+                            id="book_author_column_text"
+                            text="Author"
+                        />
+                    </Column>
+                    <Column id="book_genre_column">
+                        <Text
+                            id="book_genere_column_text"
+                            text="Genre"
+                        />
+                    </Column>
+                    <Column id="book_release_date_column">
+                        <Text
+                            id="book_release_column_text"
+                            text="Release Date"
+                        />
+                    </Column>
+                    <Column id="book_availbale_quantitiy_column">
+                        <Text
+                            id="book_quantity_column_text"
+                            text="Available Quantity"
+                        />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem id="book_column_list_item">
+                        <cells>
+                            <Text
+                                id="bool_cell_id"
+                                text="{ID}"
+                            />
+                            <Text
+                                id="bool_cell_name"
+                                text="{Name}"
+                            />
+                            <Text
+                                id="bool_cell_author"
+                                text="{Author}"
+                            />
+                            <Text
+                                id="bool_cell_genre"
+                                text="{Genre}"
+                            />
+                            <Text
+                                id="bool_cell_date"
+                                text="{
+                                    path: 'ReleaseDate',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: {
+                                        pattern: 'yyyy-MM-dd',
+                                        source: {
+                                            pattern: 'yyyy-MM-dd'
+                                        }
+                                }}"
+                            />
+                            <ObjectNumber
+                                id="bool_cell_quantity"
+                                number="{AvailableQuantity}"
+                            />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
     </Page>
 </mvc:View>
