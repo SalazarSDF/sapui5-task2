@@ -23,30 +23,30 @@ sap.ui.define(
               ReleaseDate: "1960-07-11",
               AvailableQuantity: 3,
             },
+
             {
               ID: "B003",
-              Name: "The Great Gatsby",
-              Author: "F. Scott Fitzgerald",
-              Genre: "Classic",
-              ReleaseDate: "1925-04-10",
-              AvailableQuantity: 5,
+              Name: "The Midnight Library",
+              Author: "Matt Haig",
+              Genre: "Fantasy",
+              ReleaseDate: "2020-08-13",
+              AvailableQuantity: 7,
             },
             {
               ID: "B004",
-              Name: "To Kill a Mockingbird",
-              Author: "Harper Lee",
-              Genre: "Fiction",
-              ReleaseDate: "1960-07-11",
-              AvailableQuantity: 3,
+              Name: "Project Hail Mary",
+              Author: "Andy Weir",
+              Genre: "Science Fiction",
+              ReleaseDate: "2021-05-04",
+              AvailableQuantity: 4,
             },
-
             {
               ID: "B005",
-              Name: "To Kill a Mockingbird",
-              Author: "Harper Lee",
-              Genre: "Fiction",
-              ReleaseDate: "1960-07-11",
-              AvailableQuantity: 0,
+              Name: "Where the Crawdads Sing",
+              Author: "Delia Owens",
+              Genre: "Mystery",
+              ReleaseDate: "2018-08-14",
+              AvailableQuantity: 6,
             },
           ],
         };
@@ -56,8 +56,7 @@ sap.ui.define(
         this.getView().setModel(oModel);
       },
 
-      onFilterByTitle: function () {
-      },
+      onFilterByTitle: function () {},
 
       onAddBook: function () {
         sap.m.MessageToast.show("Add book");
