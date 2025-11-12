@@ -1,10 +1,20 @@
 sap.ui.define(
-  ["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel"],
-  (Controller, JSONModel) => {
+  [
+    "sapui5task2/controller/BaseController",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+  ],
+  (BaseController, JSONModel, Filter, FilterOperator) => {
     "use strict";
 
-    return Controller.extend("sapui5task2.controller.Main", {
+    return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
+
+        if (BaseController.prototype.onInit) {
+          BaseController.prototype.onInit.apply(this, arguments);
+        }
+
         const oBookData = {
           books: [
             {
@@ -53,17 +63,88 @@ sap.ui.define(
 
         const oModel = new JSONModel(oBookData);
 
-        this.getView().setModel(oModel);
+        this.setMainModel(oModel);
+        this._initializeGenres();
       },
 
-      onFilterByTitle: function () {},
+      _initializeGenres: function () {
+        const oModel = this.getMainModel();
+        const aBooks = oModel.getProperty("/books");
+
+        const aUniqueGenres = [...new Set(aBooks.map((book) => book.Genre))];
+
+        const aGenreItems = [{ key: "", text: "All Genres" }].concat(
+          aUniqueGenres.map((genre) => ({
+            key: genre,
+            text: genre,
+          })),
+        );
+
+        oModel.setProperty("/genres", aGenreItems);
+      },
 
       onAddBook: function () {
-        sap.m.MessageToast.show("Add book");
+        const oModel = this.getMainModel();
+        const aBooks = oModel.getProperty("/books");
+
+        const oNewBook = {
+          ID: "B" + String(aBooks.length + 1).padStart(3, "0"),
+          Name: "",
+          Author: "",
+          Genre: "",
+          ReleaseDate: new Date().toISOString().split("T")[0],
+          AvailableQuantity: 1,
+        };
+
+        aBooks.push(oNewBook);
+        oModel.setProperty("/books", aBooks);
+
+        sap.m.MessageToast.show("new book Added");
       },
 
       onDeleteBook: function () {
-        sap.m.MessageToast.show("Delete book");
+        const oTable = this.byId("booksTable");
+        const aSelectedItemsIds = oTable
+          .getSelectedItems()
+          .map((item) => item.getBindingContext().getProperty("ID"));
+
+        const oModel = this.getMainModel();
+        const aBooks = oModel.getProperty("/books");
+
+        const filteredBooks = aBooks.filter(
+          (book) => !aSelectedItemsIds.includes(book["ID"]),
+        );
+        oModel.setProperty("/books", filteredBooks);
+
+        oTable.removeSelections();
+
+        sap.m.MessageToast.show("Deleted");
+      },
+
+      onBookSelect: function () {
+        const oTable = this.byId("booksTable");
+        const aSelectedItems = oTable.getSelectedItems();
+        const oDeleteButton = this.byId("delete_book_button");
+
+        oDeleteButton.setEnabled(aSelectedItems.length > 0);
+      },
+
+      onFilterByTitleAndGenre: function () {
+        const oTable = this.byId("booksTable");
+        const oBinding = oTable.getBinding("items");
+
+        const aFilters = [];
+
+        const sTitle = this.byId("search_book_input").getValue();
+        if (sTitle) {
+          aFilters.push(new Filter("Name", FilterOperator.Contains, sTitle));
+        }
+
+        const sGenre = this.byId("select_genre_select").getSelectedKey();
+        if (sGenre) {
+          aFilters.push(new Filter("Genre", FilterOperator.EQ, sGenre));
+        }
+        oBinding.filter(aFilters);
       },
     });
   },
