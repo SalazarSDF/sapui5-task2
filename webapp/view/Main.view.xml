@@ -15,6 +15,8 @@
                 }"
                 growing="true"
                 growingThreshold="10"
+                mode="MultiSelect"
+                selectionChange=".onBookSelect"
             >
                 <headerToolbar>
                     <OverflowToolbar id="books_table_Toolbar">
@@ -34,13 +36,32 @@
                             icon="sap-icon://delete"
                             text="Delete Record"
                             press=".onDeleteBook"
+                            enabled="false"
                         />
                         <ToolbarSpacer id="book_table_toolbar_spacer" />
                         <Input
                             id="search_book_input"
                             width="20rem"
                             placeholder="Filter books by Title..."
-                            submit=".onFilterByTitle"
+                        />
+                        <Select
+                            id="select_genre_select"
+                            width="12rem"
+                            items="{
+                                path: '/genres'
+                            }"
+                        >
+                            <core:Item
+                                id="select_genre_item"
+                                xmlns:core="sap.ui.core"
+                                key="{key}"
+                                text="{text}"
+                            />
+                        </Select>
+                        <Button
+                            id="filter_by_genre_and_select_button"
+                            text="Filter"
+                            press=".onFilterByTitleAndGenre"
                         />
                     </OverflowToolbar>
                 </headerToolbar>
