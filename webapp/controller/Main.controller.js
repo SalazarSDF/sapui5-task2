@@ -10,58 +10,57 @@ sap.ui.define(
 
     return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
-
         if (BaseController.prototype.onInit) {
           BaseController.prototype.onInit.apply(this, arguments);
         }
 
-        const oBookData = {
-          books: [
-            {
-              ID: "B001",
-              Name: "The Great Gatsby",
-              Author: "F. Scott Fitzgerald",
-              Genre: "Classic",
-              ReleaseDate: "1925-04-10",
-              AvailableQuantity: 5,
-            },
-            {
-              ID: "B002",
-              Name: "To Kill a Mockingbird",
-              Author: "Harper Lee",
-              Genre: "Fiction",
-              ReleaseDate: "1960-07-11",
-              AvailableQuantity: 3,
-            },
+        const aBooks = [
+          {
+            ID: "B001",
+            Name: "The Great Gatsby",
+            Author: "F. Scott Fitzgerald",
+            Genre: "Classic",
+            ReleaseDate: "1925-04-10",
+            AvailableQuantity: 5,
+          },
+          {
+            ID: "B002",
+            Name: "To Kill a Mockingbird",
+            Author: "Harper Lee",
+            Genre: "Fiction",
+            ReleaseDate: "1960-07-11",
+            AvailableQuantity: 3,
+          },
 
-            {
-              ID: "B003",
-              Name: "The Midnight Library",
-              Author: "Matt Haig",
-              Genre: "Fantasy",
-              ReleaseDate: "2020-08-13",
-              AvailableQuantity: 7,
-            },
-            {
-              ID: "B004",
-              Name: "Project Hail Mary",
-              Author: "Andy Weir",
-              Genre: "Science Fiction",
-              ReleaseDate: "2021-05-04",
-              AvailableQuantity: 4,
-            },
-            {
-              ID: "B005",
-              Name: "Where the Crawdads Sing",
-              Author: "Delia Owens",
-              Genre: "Mystery",
-              ReleaseDate: "2018-08-14",
-              AvailableQuantity: 6,
-            },
-          ],
-        };
+          {
+            ID: "B003",
+            Name: "The Midnight Library",
+            Author: "Matt Haig",
+            Genre: "Fantasy",
+            ReleaseDate: "2020-08-13",
+            AvailableQuantity: 7,
+          },
+          {
+            ID: "B004",
+            Name: "Project Hail Mary",
+            Author: "Andy Weir",
+            Genre: "Science Fiction",
+            ReleaseDate: "2021-05-04",
+            AvailableQuantity: 4,
+          },
+          {
+            ID: "B005",
+            Name: "Where the Crawdads Sing",
+            Author: "Delia Owens",
+            Genre: "Mystery",
+            ReleaseDate: "2018-08-14",
+            AvailableQuantity: 6,
+          },
+        ];
 
-        const oModel = new JSONModel(oBookData);
+        const oModel = new JSONModel({
+          books: aBooks.map((book) => ({ ...book, editMode: false })),
+        });
 
         this.setMainModel(oModel);
         this._initializeGenres();
@@ -94,6 +93,7 @@ sap.ui.define(
           Genre: "",
           ReleaseDate: new Date().toISOString().split("T")[0],
           AvailableQuantity: 1,
+          editMode: true,
         };
 
         aBooks.push(oNewBook);
@@ -145,6 +145,23 @@ sap.ui.define(
           aFilters.push(new Filter("Genre", FilterOperator.EQ, sGenre));
         }
         oBinding.filter(aFilters);
+      },
+
+      onEditTitle: function (oEvent) {
+        const oBindingContext = oEvent.getSource().getBindingContext();
+        const oModel = this.getMainModel();
+        const sPath = oBindingContext.getPath();
+
+        oModel.setProperty(sPath + "/editMode", true);
+      },
+
+      onSaveTitle: function (oEvent) {
+        const oBindingContext = oEvent.getSource().getBindingContext();
+        const oModel = this.getMainModel();
+        const sPath = oBindingContext.getPath();
+
+        oModel.setProperty(sPath + "/editMode", false);
+
       },
     });
   },

@@ -103,29 +103,45 @@
                             text="Available Quantity"
                         />
                     </Column>
+                    <Column id="book_actions_column">
+                        <Text
+                            id="book_actions_column_text"
+                            text="Actions"
+                        />
+                    </Column>
                 </columns>
 
                 <items>
                     <ColumnListItem id="book_column_list_item">
                         <cells>
                             <Text
-                                id="bool_cell_id"
+                                id="book_cell_id"
                                 text="{ID}"
                             />
+                            <HBox id="hbox_cell_name_and_edit_input">
+                                <Text
+                                    id="book_cell_name"
+                                    text="{Name}"
+                                    visible="{= !${editMode} }"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                                <Input
+                                    id="book_cell_name_input"
+                                    value="{Name}"
+                                    visible="{= ${editMode} }"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                            </HBox>
                             <Text
-                                id="bool_cell_name"
-                                text="{Name}"
-                            />
-                            <Text
-                                id="bool_cell_author"
+                                id="book_cell_author"
                                 text="{Author}"
                             />
                             <Text
-                                id="bool_cell_genre"
+                                id="book_cell_genre"
                                 text="{Genre}"
                             />
                             <Text
-                                id="bool_cell_date"
+                                id="book_cell_date"
                                 text="{
                                     path: 'ReleaseDate',
                                     type: 'sap.ui.model.type.Date',
@@ -137,9 +153,26 @@
                                 }}"
                             />
                             <ObjectNumber
-                                id="bool_cell_quantity"
+                                id="book_cell_quantity"
                                 number="{AvailableQuantity}"
                             />
+                            <HBox id="hbox_cell_edit_and_save_button">
+                                <Button
+                                    id="edit_title_button"
+                                    text="Edit Title"
+                                    press=".onEditTitle"
+                                    visible="{= !${editMode} }"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                                <Button
+                                    id="save_title_button"
+                                    text="Save"
+                                    type="Emphasized"
+                                    press=".onSaveTitle"
+                                    visible="{= ${editMode} }"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                            </HBox>
                         </cells>
                     </ColumnListItem>
                 </items>
