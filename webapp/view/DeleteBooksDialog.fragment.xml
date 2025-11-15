@@ -1,0 +1,33 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="delete_books_dialog"
+        title="Confirm Deletion"
+        type="Message"
+    >
+        <content>
+            <Text
+                id="dialog_text_on_confirm_delete"
+                text="Are you sure you want to delete selected records?"
+            />
+        </content>
+        <beginButton>
+            <Button
+                id="dialog_button_on_confirm_delete"
+                text="Yes"
+                type="Emphasized"
+                press=".onConfirmDeleteBooks"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                id="dialog_button_on_reject_delete"
+                text="No"
+                type="Emphasized"
+                press=".onCloseDeleteBooksDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

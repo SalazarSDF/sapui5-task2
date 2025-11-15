@@ -35,7 +35,7 @@
                             id="delete_book_button"
                             icon="sap-icon://delete"
                             text="Delete Record"
-                            press=".onDeleteBook"
+                            press=".onOpenCofirmDeleteDialog"
                             enabled="false"
                         />
                         <ToolbarSpacer id="book_table_toolbar_spacer" />

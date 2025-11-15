@@ -116,8 +116,6 @@ sap.ui.define(
         );
         oModel.setProperty("/books", filteredBooks);
 
-        oTable.removeSelections();
-
         sap.m.MessageToast.show("Deleted");
       },
 
@@ -161,7 +159,25 @@ sap.ui.define(
         const sPath = oBindingContext.getPath();
 
         oModel.setProperty(sPath + "/editMode", false);
+      },
 
+      onOpenCofirmDeleteDialog: async function () {
+        this.oDialog ??= await this.loadFragment({
+          name: "sapui5task2.view.DeleteBooksDialog",
+        });
+
+        this.oDialog.open();
+      },
+
+      onConfirmDeleteBooks: function () {
+        this.onDeleteBook();
+        this.onCloseDeleteBooksDialog();
+      },
+
+      onCloseDeleteBooksDialog: function () {
+        this.byId("delete_books_dialog").close();
+        this.byId("booksTable").removeSelections();;
+        this.byId("delete_book_button").setEnabled(false);
       },
     });
   },
