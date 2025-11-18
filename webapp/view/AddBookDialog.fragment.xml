@@ -1,0 +1,133 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id="add_book_dialog"
+        title="Add New Book"
+        type="Message"
+    >
+        <content>
+            <f:SimpleForm
+                id="add_book_form"
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="2"
+                columnsL="2"
+                columnsM="2"
+                singleContainerFullSize="false"
+            >
+                <f:content>
+                    <Label
+                        id="book_name_label"
+                        text="Book Name"
+                        required="true"
+                    />
+                    <Input
+                        id="book_name_input"
+                        value="{
+                            path: 'dialog>/Name',
+                            type: '.types.requiredString'
+                        }"
+                        placeholder="Enter Book Name"
+                        liveChange=".onValidateField"
+                        valueStateText="Book name is required"
+                    />
+
+                    <Label
+                        id="book_author_label"
+                        text="Author"
+                        required="true"
+                    />
+                    <Input
+                        id="book_author_input"
+                        value="{
+                            path: 'dialog>/Author',
+                            type: '.types.authorName'
+                        }"
+                        placeholder="Enter Author Name"
+                        liveChange=".onValidateField"
+                        valueStateText="Author name is required and cannot contain digits"
+                    />
+
+                    <Label
+                        id="book_genre_label"
+                        text="Genre"
+                        required="true"
+                    />
+                    <Input
+                        id="book_genre_input"
+                        value="{
+                            path: 'dialog>/Genre',
+                            type: '.types.requiredString'
+                        }"
+                        placeholder="Enter Genre"
+                        liveChange=".onValidateField"
+                        valueStateText="Genre is required"
+                    />
+
+                    <Label
+                        id="book_release_date_label"
+                        text="Release Date"
+                        required="true"
+                    />
+                    <DatePicker
+                        id="book_release_date_picker"
+                        value="{
+                            path: 'dialog>/ReleaseDate',
+                            type: '.types.requiredDate'
+                        }"
+                        valueFormat="yyyy-MM-dd"
+                        displayFormat="long"
+                        change=".onValidateField"
+                        valueStateText="Release date is required"
+                    />
+
+                    <Label
+                        id="book_quantity_label"
+                        text="Available Quantity"
+                        required="true"
+                    />
+                    <StepInput
+                        id="book_quantity_input"
+                        value="{
+                            path: 'dialog>/AvailableQuantity',
+                            type: '.types.requiredQuantity'
+                        }"
+                        min="1"
+                        max="1000"
+                        change=".onValidateField"
+                        valueStateText="Quantity must be at least 1"
+                    />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button
+                id="dialog_button_on_confirm_add"
+                text="Add"
+                type="Emphasized"
+                press=".onConfirmAddBook"
+                enabled="false"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                id="dialog_button_on_cancel_add"
+                text="Cancel"
+                type="Emphasized"
+                press=".onCloseAddBookDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
