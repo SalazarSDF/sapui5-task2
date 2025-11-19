@@ -36,11 +36,10 @@
                     <Input
                         id="book_name_input"
                         value="{
-                            path: 'dialog>/Name',
                             type: '.types.requiredString'
                         }"
                         placeholder="Enter Book Name"
-                        liveChange=".onValidateField"
+                        liveChange=".onValidateForm"
                         valueStateText="Book name is required"
                     />
 
@@ -52,11 +51,10 @@
                     <Input
                         id="book_author_input"
                         value="{
-                            path: 'dialog>/Author',
                             type: '.types.authorName'
                         }"
                         placeholder="Enter Author Name"
-                        liveChange=".onValidateField"
+                        liveChange=".onValidateForm"
                         valueStateText="Author name is required and cannot contain digits"
                     />
 
@@ -68,11 +66,10 @@
                     <Input
                         id="book_genre_input"
                         value="{
-                            path: 'dialog>/Genre',
                             type: '.types.requiredString'
                         }"
                         placeholder="Enter Genre"
-                        liveChange=".onValidateField"
+                        liveChange=".onValidateForm"
                         valueStateText="Genre is required"
                     />
 
@@ -84,12 +81,11 @@
                     <DatePicker
                         id="book_release_date_picker"
                         value="{
-                            path: 'dialog>/ReleaseDate',
                             type: '.types.requiredDate'
                         }"
                         valueFormat="yyyy-MM-dd"
                         displayFormat="long"
-                        change=".onValidateField"
+                        change=".onValidateForm"
                         valueStateText="Release date is required"
                     />
 
@@ -101,12 +97,11 @@
                     <StepInput
                         id="book_quantity_input"
                         value="{
-                            path: 'dialog>/AvailableQuantity',
                             type: '.types.requiredQuantity'
                         }"
                         min="1"
                         max="1000"
-                        change=".onValidateField"
+                        change=".onValidateForm"
                         valueStateText="Quantity must be at least 1"
                     />
                 </f:content>

@@ -164,16 +164,7 @@ sap.ui.define(
           books: aBooks.map((book) => ({ ...book, editMode: false })),
         });
 
-        const oDialogModel = new JSONModel({
-          Name: "",
-          Author: "",
-          Genre: "",
-          ReleaseDate: new Date().toISOString().split("T")[0],
-          AvailableQuantity: 1,
-        });
-
         this.setMainModel(oModel);
-        this.setModel(oDialogModel, "dialog");
         this._initializeGenres();
       },
 
@@ -201,18 +192,17 @@ sap.ui.define(
       },
 
       onOpenAddBookDialog: async function () {
-        const oDialogModel = this.getModel("dialog");
-        oDialogModel.setData({
-          Name: "",
-          Author: "",
-          Genre: "",
-          ReleaseDate: new Date().toISOString().split("T")[0],
-          AvailableQuantity: 1,
-        });
-
         this.oAddDialog ??= await this.loadFragment({
           name: "sapui5task2.view.AddBookDialog",
         });
+
+        this.byId("book_name_input").setValue("");
+        this.byId("book_author_input").setValue("");
+        this.byId("book_genre_input").setValue("");
+        this.byId("book_release_date_picker").setValue(
+          new Date().toISOString().split("T")[0],
+        );
+        this.byId("book_quantity_input").setValue(1);
 
         this.byId("dialog_button_on_confirm_add").setEnabled(false);
         this._resetValidationStates();
@@ -237,29 +227,7 @@ sap.ui.define(
         });
       },
 
-      onValidateField: function (oEvent) {
-        const oSource = oEvent.getSource();
-        const sValue = oSource.getValue();
-
-        try {
-          if (oSource.getBinding("value")) {
-            const oBinding = oSource.getBinding("value");
-            if (oBinding && oBinding.type && oBinding.type.validateValue) {
-              oBinding.type.validateValue(sValue);
-              oSource.setValueState("None");
-            }
-          }
-        } catch (oError) {
-          oSource.setValueState("Error");
-          if (oError.message) {
-            oSource.setValueStateText(oError.message);
-          }
-        }
-
-        this._validateForm();
-      },
-
-      _validateForm: function () {
+      onValidateForm: function () {
         const aFields = [
           {
             id: "book_name_input",
@@ -326,10 +294,6 @@ sap.ui.define(
       },
 
       onConfirmAddBook: function () {
-        if (!this._validateForm()) {
-          MessageToast.show("Please correct the errors in the form");
-          return;
-        }
 
         const sName = this.byId("book_name_input").getValue();
         const sAuthor = this.byId("book_author_input").getValue();
