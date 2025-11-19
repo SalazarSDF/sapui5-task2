@@ -260,33 +260,25 @@ sap.ui.define(
       },
 
       _validateForm: function () {
-        const oDialogModel = this.getModel("dialog");
-        const oData = oDialogModel.getData();
-
         const aFields = [
           {
             id: "book_name_input",
-            value: oData.Name,
             type: RequiredStringType,
           },
           {
             id: "book_author_input",
-            value: oData.Author,
             type: AuthorNameType,
           },
           {
             id: "book_genre_input",
-            value: oData.Genre,
             type: RequiredStringType,
           },
           {
             id: "book_release_date_picker",
-            value: oData.ReleaseDate,
             type: RequiredDateType,
           },
           {
             id: "book_quantity_input",
-            value: oData.AvailableQuantity,
             type: RequiredQuantityType,
           },
         ];
@@ -296,9 +288,10 @@ sap.ui.define(
         aFields.forEach((oField) => {
           const oControl = this.byId(oField.id);
           if (oControl) {
+            const sValue = oControl.getValue();
             try {
               const oTypeInstance = new oField.type();
-              oTypeInstance.validateValue(oField.value);
+              oTypeInstance.validateValue(sValue);
               oControl.setValueState("None");
             } catch (oError) {
               oControl.setValueState("Error");
@@ -311,6 +304,7 @@ sap.ui.define(
         });
 
         this.byId("dialog_button_on_confirm_add").setEnabled(bIsFormValid);
+        return bIsFormValid;
       },
 
       _generateBookId: function () {
@@ -332,8 +326,17 @@ sap.ui.define(
       },
 
       onConfirmAddBook: function () {
-        const oDialogModel = this.getModel("dialog");
-        const oNewBookData = oDialogModel.getData();
+        if (!this._validateForm()) {
+          MessageToast.show("Please correct the errors in the form");
+          return;
+        }
+
+        const sName = this.byId("book_name_input").getValue();
+        const sAuthor = this.byId("book_author_input").getValue();
+        const sGenre = this.byId("book_genre_input").getValue();
+        const sReleaseDate = this.byId("book_release_date_picker").getValue();
+        const sQuantity = this.byId("book_quantity_input").getValue();
+
         const oModel = this.getMainModel();
         const aBooks = oModel.getProperty("/books");
 
@@ -341,11 +344,11 @@ sap.ui.define(
 
         const oNewBook = {
           ID: sNewId,
-          Name: oNewBookData.Name,
-          Author: oNewBookData.Author,
-          Genre: oNewBookData.Genre,
-          ReleaseDate: oNewBookData.ReleaseDate,
-          AvailableQuantity: parseInt(oNewBookData.AvailableQuantity),
+          Name: sName,
+          Author: sAuthor,
+          Genre: sGenre,
+          ReleaseDate: sReleaseDate,
+          AvailableQuantity: parseInt(sQuantity),
           editMode: false,
         };
 
@@ -353,7 +356,7 @@ sap.ui.define(
         oModel.setProperty("/books", aBooks);
 
         MessageToast.show(
-          `New book "${oNewBookData.Name}" added successfully with ID: ${sNewId}`,
+          `New book "${sName}" added successfully with ID: ${sNewId}`,
         );
         this.onCloseAddBookDialog();
       },
