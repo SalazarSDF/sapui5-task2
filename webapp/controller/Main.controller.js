@@ -7,6 +7,7 @@ sap.ui.define(
     "sap/ui/model/SimpleType",
     "sap/ui/model/ValidateException",
     "sap/m/MessageToast",
+    "sap/m/MessageBox",
   ],
   (
     BaseController,
@@ -16,6 +17,7 @@ sap.ui.define(
     SimpleType,
     ValidateException,
     MessageToast,
+    MessageBox
   ) => {
     "use strict";
 
@@ -164,15 +166,24 @@ sap.ui.define(
           books: aBooks.map((book) => ({ ...book, editMode: false })),
         });
 
+        const oDialogModel = new JSONModel({
+          Name: "",
+          Author: "",
+          Genre: "",
+          ReleaseDate: new Date().toISOString().split("T")[0],
+          AvailableQuantity: 1,
+        });
+
         this.setMainModel(oModel);
+        this.setModel(oDialogModel, "dialog");
         this._initializeGenres();
       },
 
       types: {
-        authorName: AuthorNameType,
-        requiredString: RequiredStringType,
-        requiredDate: RequiredDateType,
-        requiredQuantity: RequiredQuantityType,
+        authorName: new AuthorNameType(),
+        requiredString: new RequiredStringType(),
+        requiredDate: new RequiredDateType(),
+        requiredQuantity: new RequiredQuantityType(),
       },
 
       _initializeGenres: function () {
@@ -192,24 +203,25 @@ sap.ui.define(
       },
 
       onOpenAddBookDialog: async function () {
+        const oDialogModel = this.getModel("dialog");
+        oDialogModel.setData({
+          Name: "",
+          Author: "",
+          Genre: "",
+          ReleaseDate: new Date().toISOString().split("T")[0],
+          AvailableQuantity: 1,
+        });
+
         this.oAddDialog ??= await this.loadFragment({
           name: "sapui5task2.view.AddBookDialog",
         });
 
-        this.byId("book_name_input").setValue("");
-        this.byId("book_author_input").setValue("");
-        this.byId("book_genre_input").setValue("");
-        this.byId("book_release_date_picker").setValue(
-          new Date().toISOString().split("T")[0],
-        );
-        this.byId("book_quantity_input").setValue(1);
-
-        this.byId("dialog_button_on_confirm_add").setEnabled(false);
-        this._resetValidationStates();
+        //this._resetValidationStates();
 
         this.oAddDialog.open();
       },
 
+      /*
       _resetValidationStates: function () {
         const aInputIds = [
           "book_name_input",
@@ -228,25 +240,33 @@ sap.ui.define(
       },
 
       onValidateForm: function () {
+        const oDialogModel = this.getModel("dialog");
+        const oData = oDialogModel.getData();
+
         const aFields = [
           {
             id: "book_name_input",
+            value: oData.Name,
             type: RequiredStringType,
           },
           {
             id: "book_author_input",
+            value: oData.Author,
             type: AuthorNameType,
           },
           {
             id: "book_genre_input",
+            value: oData.Genre,
             type: RequiredStringType,
           },
           {
             id: "book_release_date_picker",
+            value: oData.ReleaseDate,
             type: RequiredDateType,
           },
           {
             id: "book_quantity_input",
+            value: oData.AvailableQuantity,
             type: RequiredQuantityType,
           },
         ];
@@ -259,6 +279,8 @@ sap.ui.define(
             const sValue = oControl.getValue();
             try {
               const oTypeInstance = new oField.type();
+              console.log("VALUE FROM MODEL = ", oField.value);
+              console.log("VALUE FROM VIEW = ", sValue);
               oTypeInstance.validateValue(sValue);
               oControl.setValueState("None");
             } catch (oError) {
@@ -274,6 +296,7 @@ sap.ui.define(
         this.byId("dialog_button_on_confirm_add").setEnabled(bIsFormValid);
         return bIsFormValid;
       },
+      */
 
       _generateBookId: function () {
         const oModel = this.getMainModel();
@@ -294,13 +317,22 @@ sap.ui.define(
       },
 
       onConfirmAddBook: function () {
+        const oDialogModel = this.getModel("dialog");
+        const { sAuthor, sAvailableQuantity, sGenre, sName, sReleaseDate } =
+          oDialogModel.getData();
+        const { authorName, requiredString, requiredDate, requiredQuantity } =
+          this.types;
 
-        const sName = this.byId("book_name_input").getValue();
-        const sAuthor = this.byId("book_author_input").getValue();
-        const sGenre = this.byId("book_genre_input").getValue();
-        const sReleaseDate = this.byId("book_release_date_picker").getValue();
-        const sQuantity = this.byId("book_quantity_input").getValue();
-
+        try {
+          authorName.validateValue(sAuthor);
+          requiredString.validateValue(sGenre);
+          requiredString.validateValue(sName);
+          requiredDate.validateValue(sReleaseDate);
+          requiredQuantity.validateValue(sAvailableQuantity);
+        } catch (e) {
+          MessageBox.alert(e.message);
+          return;
+        }
         const oModel = this.getMainModel();
         const aBooks = oModel.getProperty("/books");
 

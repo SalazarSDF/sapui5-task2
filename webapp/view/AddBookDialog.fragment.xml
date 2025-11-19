@@ -36,10 +36,9 @@
                     <Input
                         id="book_name_input"
                         value="{
-                            type: '.types.requiredString'
+                            path: 'dialog>/Name'
                         }"
                         placeholder="Enter Book Name"
-                        liveChange=".onValidateForm"
                         valueStateText="Book name is required"
                     />
 
@@ -51,10 +50,9 @@
                     <Input
                         id="book_author_input"
                         value="{
-                            type: '.types.authorName'
+                            path: 'dialog>/Author'
                         }"
                         placeholder="Enter Author Name"
-                        liveChange=".onValidateForm"
                         valueStateText="Author name is required and cannot contain digits"
                     />
 
@@ -66,10 +64,9 @@
                     <Input
                         id="book_genre_input"
                         value="{
-                            type: '.types.requiredString'
+                            path: 'dialog>/Genre'
                         }"
                         placeholder="Enter Genre"
-                        liveChange=".onValidateForm"
                         valueStateText="Genre is required"
                     />
 
@@ -81,11 +78,10 @@
                     <DatePicker
                         id="book_release_date_picker"
                         value="{
-                            type: '.types.requiredDate'
+                            path: 'dialog>/ReleaseDate'
                         }"
                         valueFormat="yyyy-MM-dd"
                         displayFormat="long"
-                        change=".onValidateForm"
                         valueStateText="Release date is required"
                     />
 
@@ -97,11 +93,10 @@
                     <StepInput
                         id="book_quantity_input"
                         value="{
-                            type: '.types.requiredQuantity'
+                            path: 'dialog>/AvailableQuantity'
                         }"
                         min="1"
                         max="1000"
-                        change=".onValidateForm"
                         valueStateText="Quantity must be at least 1"
                     />
                 </f:content>
@@ -113,7 +108,6 @@
                 text="Add"
                 type="Emphasized"
                 press=".onConfirmAddBook"
-                enabled="false"
             />
         </beginButton>
         <endButton>
