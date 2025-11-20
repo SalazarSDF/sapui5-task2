@@ -29,7 +29,7 @@
                             id="add_book_button"
                             icon="sap-icon://add"
                             text="Add Record"
-                            press=".onAddBook"
+                            press=".onOpenAddBookDialog"
                         />
                         <Button
                             id="delete_book_button"
