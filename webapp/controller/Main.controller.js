@@ -17,7 +17,7 @@ sap.ui.define(
     SimpleType,
     ValidateException,
     MessageToast,
-    MessageBox
+    MessageBox,
   ) => {
     "use strict";
 
@@ -166,24 +166,16 @@ sap.ui.define(
           books: aBooks.map((book) => ({ ...book, editMode: false })),
         });
 
-        const oDialogModel = new JSONModel({
-          Name: "",
-          Author: "",
-          Genre: "",
-          ReleaseDate: new Date().toISOString().split("T")[0],
-          AvailableQuantity: 1,
-        });
-
         this.setMainModel(oModel);
-        this.setModel(oDialogModel, "dialog");
         this._initializeGenres();
+        oModel.setProperty("/dialogBook", {});
       },
 
       types: {
-        authorName: new AuthorNameType(),
-        requiredString: new RequiredStringType(),
-        requiredDate: new RequiredDateType(),
-        requiredQuantity: new RequiredQuantityType(),
+        authorName: AuthorNameType,
+        requiredString: RequiredStringType,
+        requiredDate: RequiredDateType,
+        requiredQuantity: RequiredQuantityType,
       },
 
       _initializeGenres: function () {
@@ -203,21 +195,19 @@ sap.ui.define(
       },
 
       onOpenAddBookDialog: async function () {
-        const oDialogModel = this.getModel("dialog");
-        oDialogModel.setData({
-          Name: "",
-          Author: "",
-          Genre: "",
-          ReleaseDate: new Date().toISOString().split("T")[0],
-          AvailableQuantity: 1,
-        });
-
+        const oModel = this.getMainModel();
         this.oAddDialog ??= await this.loadFragment({
           name: "sapui5task2.view.AddBookDialog",
         });
 
         //this._resetValidationStates();
-
+        oModel.setProperty("/dialogBook", {
+          Name: "",
+          Author: "",
+          Genre: "",
+          ReleaseDate: new Date().toISOString().split("T")[0],
+          AvailableQuantity: 0,
+        });
         this.oAddDialog.open();
       },
 
@@ -240,33 +230,33 @@ sap.ui.define(
       },
 
       onValidateForm: function () {
-        const oDialogModel = this.getModel("dialog");
-        const oData = oDialogModel.getData();
+        const oModel = this.getMainModel();
+        const oDialogBook = oModel.getProperty("/dialogBook");
 
         const aFields = [
           {
             id: "book_name_input",
-            value: oData.Name,
+            value: oDialogBook.Name,
             type: RequiredStringType,
           },
           {
             id: "book_author_input",
-            value: oData.Author,
+            value: oDialogBook.Author,
             type: AuthorNameType,
           },
           {
             id: "book_genre_input",
-            value: oData.Genre,
+            value: oDialogBook.Genre,
             type: RequiredStringType,
           },
           {
             id: "book_release_date_picker",
-            value: oData.ReleaseDate,
+            value: oDialogBook.ReleaseDate,
             type: RequiredDateType,
           },
           {
             id: "book_quantity_input",
-            value: oData.AvailableQuantity,
+            value: oDialogBook.AvailableQuantity,
             type: RequiredQuantityType,
           },
         ];
@@ -279,8 +269,6 @@ sap.ui.define(
             const sValue = oControl.getValue();
             try {
               const oTypeInstance = new oField.type();
-              console.log("VALUE FROM MODEL = ", oField.value);
-              console.log("VALUE FROM VIEW = ", sValue);
               oTypeInstance.validateValue(sValue);
               oControl.setValueState("None");
             } catch (oError) {
@@ -293,10 +281,37 @@ sap.ui.define(
           }
         });
 
-        this.byId("dialog_button_on_confirm_add").setEnabled(bIsFormValid);
+        //this.byId("dialog_button_on_confirm_add").setEnabled(bIsFormValid);
         return bIsFormValid;
       },
       */
+
+      _validateNewBook: function () {
+        const oModel = this.getMainModel();
+        const oDialogBook = oModel.getProperty("/dialogBook");
+
+        const { Author, AvailableQuantity, Genre, Name, ReleaseDate } =
+          oDialogBook;
+        let bIsValid = true;
+
+        try {
+          const authorName = new AuthorNameType();
+          const requiredString = new RequiredStringType();
+          const requiredDate = new RequiredDateType();
+          const requiredQuantity = new RequiredQuantityType();
+
+          authorName.validateValue(Author);
+          requiredString.validateValue(Genre);
+          requiredString.validateValue(Name);
+          requiredDate.validateValue(ReleaseDate);
+          requiredQuantity.validateValue(AvailableQuantity);
+        } catch (e) {
+          MessageBox.alert(e.message);
+          bIsValid = false;
+        }
+
+        return bIsValid;
+      },
 
       _generateBookId: function () {
         const oModel = this.getMainModel();
@@ -317,34 +332,23 @@ sap.ui.define(
       },
 
       onConfirmAddBook: function () {
-        const oDialogModel = this.getModel("dialog");
-        const { sAuthor, sAvailableQuantity, sGenre, sName, sReleaseDate } =
-          oDialogModel.getData();
-        const { authorName, requiredString, requiredDate, requiredQuantity } =
-          this.types;
-
-        try {
-          authorName.validateValue(sAuthor);
-          requiredString.validateValue(sGenre);
-          requiredString.validateValue(sName);
-          requiredDate.validateValue(sReleaseDate);
-          requiredQuantity.validateValue(sAvailableQuantity);
-        } catch (e) {
-          MessageBox.alert(e.message);
+        if (!this._validateNewBook()) {
           return;
         }
-        const oModel = this.getMainModel();
-        const aBooks = oModel.getProperty("/books");
 
+        const oModel = this.getMainModel();
+        const oDialogBook = oModel.getProperty("/dialogBook");
+
+        const aBooks = oModel.getProperty("/books");
         const sNewId = this._generateBookId();
 
         const oNewBook = {
           ID: sNewId,
-          Name: sName,
-          Author: sAuthor,
-          Genre: sGenre,
-          ReleaseDate: sReleaseDate,
-          AvailableQuantity: parseInt(sQuantity),
+          Name: oDialogBook.Name,
+          Author: oDialogBook.Author,
+          Genre: oDialogBook.Genre,
+          ReleaseDate: oDialogBook.ReleaseDate,
+          AvailableQuantity: parseInt(oDialogBook.AvailableQuantity),
           editMode: false,
         };
 
@@ -352,7 +356,7 @@ sap.ui.define(
         oModel.setProperty("/books", aBooks);
 
         MessageToast.show(
-          `New book "${sName}" added successfully with ID: ${sNewId}`,
+          `New book "${oDialogBook.Name}" added successfully with ID: ${sNewId}`,
         );
         this.onCloseAddBookDialog();
       },

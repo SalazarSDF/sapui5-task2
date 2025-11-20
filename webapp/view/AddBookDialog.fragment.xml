@@ -36,12 +36,11 @@
                     <Input
                         id="book_name_input"
                         value="{
-                            path: 'dialog>/Name'
+                            path: '/dialogBook/Name'
                         }"
                         placeholder="Enter Book Name"
                         valueStateText="Book name is required"
                     />
-
                     <Label
                         id="book_author_label"
                         text="Author"
@@ -50,8 +49,9 @@
                     <Input
                         id="book_author_input"
                         value="{
-                            path: 'dialog>/Author'
+                            path: '/dialogBook/Author'
                         }"
+
                         placeholder="Enter Author Name"
                         valueStateText="Author name is required and cannot contain digits"
                     />
@@ -64,8 +64,9 @@
                     <Input
                         id="book_genre_input"
                         value="{
-                            path: 'dialog>/Genre'
+                            path: '/dialogBook/Genre'
                         }"
+
                         placeholder="Enter Genre"
                         valueStateText="Genre is required"
                     />
@@ -78,8 +79,9 @@
                     <DatePicker
                         id="book_release_date_picker"
                         value="{
-                            path: 'dialog>/ReleaseDate'
+                            path: '/dialogBook/ReleaseDate'
                         }"
+
                         valueFormat="yyyy-MM-dd"
                         displayFormat="long"
                         valueStateText="Release date is required"
@@ -93,8 +95,9 @@
                     <StepInput
                         id="book_quantity_input"
                         value="{
-                            path: 'dialog>/AvailableQuantity'
+                            path: '/dialogBook/AvailableQuantity'
                         }"
+
                         min="1"
                         max="1000"
                         valueStateText="Quantity must be at least 1"
