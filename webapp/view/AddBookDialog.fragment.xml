@@ -5,7 +5,7 @@
 >
     <Dialog
         id="add_book_dialog"
-        title="Add New Book"
+        title="{i18n>addBookDialogTitle}"
         type="Message"
     >
         <content>
@@ -30,7 +30,7 @@
                 <f:content>
                     <Label
                         id="book_name_label"
-                        text="Book Name"
+                        text="{i18n>bookNameLabel}"
                         required="true"
                     />
                     <Input
@@ -38,12 +38,12 @@
                         value="{
                             path: '/dialogBook/Name'
                         }"
-                        placeholder="Enter Book Name"
-                        valueStateText="Book name is required"
+                        placeholder="{i18n>bookNamePlaceholder}"
+                        valueStateText="{i18n>bookNameRequired}"
                     />
                     <Label
                         id="book_author_label"
-                        text="Author"
+                        text="{i18n>bookAuthorLabel}"
                         required="true"
                     />
                     <Input
@@ -51,14 +51,13 @@
                         value="{
                             path: '/dialogBook/Author'
                         }"
-
-                        placeholder="Enter Author Name"
-                        valueStateText="Author name is required and cannot contain digits"
+                        placeholder="{i18n>bookAuthorPlaceholder}"
+                        valueStateText="{i18n>bookAuthorRequired}"
                     />
 
                     <Label
                         id="book_genre_label"
-                        text="Genre"
+                        text="{i18n>bookGenreLabel}"
                         required="true"
                     />
                     <Input
@@ -66,14 +65,13 @@
                         value="{
                             path: '/dialogBook/Genre'
                         }"
-
-                        placeholder="Enter Genre"
-                        valueStateText="Genre is required"
+                        placeholder="{i18n>bookGenrePlaceholder}"
+                        valueStateText="{i18n>bookGenreRequired}"
                     />
 
                     <Label
                         id="book_release_date_label"
-                        text="Release Date"
+                        text="{i18n>bookReleaseDateLabel}"
                         required="true"
                     />
                     <DatePicker
@@ -81,15 +79,14 @@
                         value="{
                             path: '/dialogBook/ReleaseDate'
                         }"
-
                         valueFormat="yyyy-MM-dd"
                         displayFormat="long"
-                        valueStateText="Release date is required"
+                        valueStateText="{i18n>bookReleaseDateRequired}"
                     />
 
                     <Label
                         id="book_quantity_label"
-                        text="Available Quantity"
+                        text="{i18n>bookQuantityLabel}"
                         required="true"
                     />
                     <StepInput
@@ -97,10 +94,9 @@
                         value="{
                             path: '/dialogBook/AvailableQuantity'
                         }"
-
                         min="1"
                         max="1000"
-                        valueStateText="Quantity must be at least 1"
+                        valueStateText="{i18n>bookQuantityMin}"
                     />
                 </f:content>
             </f:SimpleForm>
@@ -108,7 +104,7 @@
         <beginButton>
             <Button
                 id="dialog_button_on_confirm_add"
-                text="Add"
+                text="{i18n>addButton}"
                 type="Emphasized"
                 press=".onConfirmAddBook"
             />
@@ -116,7 +112,7 @@
         <endButton>
             <Button
                 id="dialog_button_on_cancel_add"
-                text="Cancel"
+                text="{i18n>cancelButton}"
                 type="Emphasized"
                 press=".onCloseAddBookDialog"
             />
