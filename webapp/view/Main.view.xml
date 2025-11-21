@@ -23,19 +23,19 @@
                     <OverflowToolbar id="books_table_Toolbar">
                         <Title
                             id="books_counter_title"
-                            text="Books ({= ${/books}.length })"
+                            text="{i18n>booksCounter} ({= ${/books}.length })"
                             level="H2"
                         />
                         <Button
                             id="add_book_button"
                             icon="sap-icon://add"
-                            text="Add Record"
+                            text="{i18n>addRecordButton}"
                             press=".onOpenAddBookDialog"
                         />
                         <Button
                             id="delete_book_button"
                             icon="sap-icon://delete"
-                            text="Delete Record"
+                            text="{i18n>deleteRecordButton}"
                             press=".onOpenCofirmDeleteDialog"
                             enabled="{= ${view>/isRowsSelected}}"
                         />
@@ -44,7 +44,7 @@
                             id="search_book_input"
                             width="20rem"
                             value="{view>/filters/title}"
-                            placeholder="Filter books by Title..."
+                            placeholder="{i18n>searchPlaceholder}"
                         />
                         <Select
                             id="select_genre_select"
@@ -62,7 +62,7 @@
                         </Select>
                         <Button
                             id="filter_by_genre_and_select_button"
-                            text="Filter"
+                            text="{i18n>filterButton}"
                             press=".onFilterByTitleAndGenre"
                         />
                     </OverflowToolbar>
@@ -72,43 +72,43 @@
                     <Column id="book_id_column">
                         <Text
                             id="book_id_column_text"
-                            text="ID"
+                            text="{i18n>bookIdColumn}"
                         />
                     </Column>
                     <Column id="book_name_column">
                         <Text
                             id="book_name_column_text"
-                            text="Book Name"
+                            text="{i18n>bookNameColumn}"
                         />
                     </Column>
                     <Column id="book_author_column">
                         <Text
                             id="book_author_column_text"
-                            text="Author"
+                            text="{i18n>bookAuthorColumn}"
                         />
                     </Column>
                     <Column id="book_genre_column">
                         <Text
                             id="book_genere_column_text"
-                            text="Genre"
+                            text="{i18n>bookGenreColumn}"
                         />
                     </Column>
                     <Column id="book_release_date_column">
                         <Text
                             id="book_release_column_text"
-                            text="Release Date"
+                            text="{i18n>bookReleaseDateColumn}"
                         />
                     </Column>
                     <Column id="book_availbale_quantitiy_column">
                         <Text
                             id="book_quantity_column_text"
-                            text="Available Quantity"
+                            text="{i18n>bookQuantityColumn}"
                         />
                     </Column>
                     <Column id="book_actions_column">
                         <Text
                             id="book_actions_column_text"
-                            text="Actions"
+                            text="{i18n>bookActionsColumn}"
                         />
                     </Column>
                 </columns>
@@ -144,15 +144,13 @@
                             />
                             <Text
                                 id="book_cell_date"
+                                core:require="{
+								    Formatter: 'sapui5task2/model/formatter'
+						        }"
                                 text="{
                                     path: 'ReleaseDate',
-                                    type: 'sap.ui.model.type.Date',
-                                    formatOptions: {
-                                        pattern: 'yyyy-MM-dd',
-                                        source: {
-                                            pattern: 'yyyy-MM-dd'
-                                        }
-                                }}"
+                                    formatter: 'Formatter.formatYear'
+                                }"
                             />
                             <ObjectNumber
                                 id="book_cell_quantity"
@@ -164,6 +162,8 @@
                                     press=".onToggleEdit"
                                     text="{= ${editMode} ? 'Save' : 'Edit Title' }"
                                     type="{= ${editMode} ? 'Emphasized' : 'Default' }"
+                                    visible="{= !${editMode} }"
+                                    class="sapUiTinyMarginEnd"
                                 />
                             </HBox>
                         </cells>

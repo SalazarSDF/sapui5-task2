@@ -5,7 +5,7 @@
 >
     <Dialog
         id="add_book_dialog"
-        title="Add New Book"
+        title="{i18n>addBookDialogTitle}"
         type="Message"
     >
         <content>
@@ -30,7 +30,7 @@
                 <f:content>
                     <Label
                         id="book_name_label"
-                        text="Book Name"
+                        text="{i18n>bookNameLabel}"
                         required="true"
                     />
                     <Input
@@ -38,13 +38,13 @@
                         value="{
                             path: 'dialogBook>/book/Name'
                         }"
-                        placeholder="Enter Book Name"
+                        placeholder="{i18n>bookNamePlaceholder}"
                         change=".onValidateForm"
                         valueStateText="{dialogBook>/validation/Name}"
                     />
                     <Label
                         id="book_author_label"
-                        text="Author"
+                        text="{i18n>bookAuthorLabel}"
                         required="true"
                     />
                     <Input
@@ -52,14 +52,14 @@
                         value="{
                             path: 'dialogBook>/book/Author'
                         }"
-                        placeholder="Enter Author Name"
+                        placeholder="{i18n>bookAuthorPlaceholder}"
                         change=".onValidateForm"
                         valueStateText="{dialogBook>/validation/Author}"
                     />
 
                     <Label
                         id="book_genre_label"
-                        text="Genre"
+                        text="{i18n>bookGenreLabel}"
                         required="true"
                     />
                     <Input
@@ -67,14 +67,14 @@
                         value="{
                             path: 'dialogBook>/book/Genre'
                         }"
-                        placeholder="Enter Genre"
+                        placeholder="{i18n>bookGenrePlaceholder}"
                         change=".onValidateForm"
                         valueStateText="{dialogBook>/validation/Genre}"
                     />
 
                     <Label
                         id="book_release_date_label"
-                        text="Release Date"
+                        text="{i18n>bookReleaseDateLabel}"
                         required="true"
                     />
                     <DatePicker
@@ -90,7 +90,7 @@
 
                     <Label
                         id="book_quantity_label"
-                        text="Available Quantity"
+                        text="{i18n>bookQuantityLabel}"
                         required="true"
                     />
                     <StepInput
@@ -109,7 +109,7 @@
         <beginButton>
             <Button
                 id="dialog_button_on_confirm_add"
-                text="Add"
+                text="{i18n>addButton}"
                 type="Emphasized"
                 press=".onConfirmAddBook"
                 visible="{dialogBook>/validation/isValid}"
@@ -118,8 +118,8 @@
         <endButton>
             <Button
                 id="dialog_button_on_cancel_add"
-                text="Cancel"
-                type="Default"
+                text="{i18n>cancelButton}"
+                type="Emphasized"
                 press=".onCloseAddBookDialog"
             />
         </endButton>
