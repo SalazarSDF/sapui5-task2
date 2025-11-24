@@ -1,6 +1,7 @@
 <mvc:View
     controllerName="sapui5task2.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
     xmlns="sap.m"
 >
     <Page
@@ -36,26 +37,27 @@
                             icon="sap-icon://delete"
                             text="Delete Record"
                             press=".onOpenCofirmDeleteDialog"
-                            enabled="false"
+                            enabled="{= ${view>/isRowsSelected}}"
                         />
                         <ToolbarSpacer id="book_table_toolbar_spacer" />
                         <Input
                             id="search_book_input"
                             width="20rem"
+                            value="{view>/filters/title}"
                             placeholder="Filter books by Title..."
                         />
                         <Select
                             id="select_genre_select"
                             width="12rem"
-                            items="{
-                                path: '/genres'
-                            }"
+                            selectedKey="{view>/filters/genre}"
+                            items="{path: 'view>/genres'}"
+                            change=".onFilterByTitleAndGenre"
                         >
                             <core:Item
                                 id="select_genre_item"
                                 xmlns:core="sap.ui.core"
-                                key="{key}"
-                                text="{text}"
+                                key="{view>key}"
+                                text="{view>text}"
                             />
                         </Select>
                         <Button
@@ -122,13 +124,13 @@
                                 <Text
                                     id="book_cell_name"
                                     text="{Name}"
-                                    visible="{= !${editMode} }"
+                                    visible="{= ${view>/editingBookId} !== ${ID} }"
                                     class="sapUiTinyMarginEnd"
                                 />
                                 <Input
                                     id="book_cell_name_input"
                                     value="{Name}"
-                                    visible="{= ${editMode} }"
+                                    visible="{= ${view>/editingBookId} === ${ID} }"
                                     class="sapUiTinyMarginEnd"
                                 />
                             </HBox>
@@ -156,21 +158,12 @@
                                 id="book_cell_quantity"
                                 number="{AvailableQuantity}"
                             />
-                            <HBox id="hbox_cell_edit_and_save_button">
+                            <HBox id="hbox_cell_edit_and_save">
                                 <Button
-                                    id="edit_title_button"
-                                    text="Edit Title"
-                                    press=".onEditTitle"
-                                    visible="{= !${editMode} }"
-                                    class="sapUiTinyMarginEnd"
-                                />
-                                <Button
-                                    id="save_title_button"
-                                    text="Save"
-                                    type="Emphasized"
-                                    press=".onSaveTitle"
-                                    visible="{= ${editMode} }"
-                                    class="sapUiTinyMarginEnd"
+                                    id="hbox_cell_edit_and_save_button"
+                                    text="{= ${view>/editingBookId} === ${ID} ? 'Save' : 'Edit Title' }"
+                                    press=".onToggleEdit"
+                                    type="{= ${view>/editingBookId} === ${ID}  ? 'Emphasized' : 'Default' }"
                                 />
                             </HBox>
                         </cells>

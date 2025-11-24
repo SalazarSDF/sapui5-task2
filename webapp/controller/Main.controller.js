@@ -163,12 +163,27 @@ sap.ui.define(
         ];
 
         const oModel = new JSONModel({
-          books: aBooks.map((book) => ({ ...book, editMode: false })),
+          books: aBooks,
+        });
+
+        const oViewModel = new JSONModel({
+          genres: [],
+          isRowsSelected: false,
+          filters: {
+            title: "",
+            genre: "",
+          },
+
+          editingBookId: null,
+          editMode: false,
+
+          dialogBook: {},
+          //editModes: {}
         });
 
         this.setMainModel(oModel);
+        this.setModel(oViewModel, "view");
         this._initializeGenres();
-        oModel.setProperty("/dialogBook", {});
       },
 
       types: {
@@ -180,6 +195,7 @@ sap.ui.define(
 
       _initializeGenres: function () {
         const oModel = this.getMainModel();
+        const oViewModel = this.getModel("view");
         const aBooks = oModel.getProperty("/books");
 
         const aUniqueGenres = [...new Set(aBooks.map((book) => book.Genre))];
@@ -191,27 +207,37 @@ sap.ui.define(
           })),
         );
 
-        oModel.setProperty("/genres", aGenreItems);
+        oViewModel.setProperty("/genres", aGenreItems);
       },
 
       onOpenAddBookDialog: async function () {
-        const oModel = this.getMainModel();
         this.oAddDialog ??= await this.loadFragment({
-          name: "sapui5task2.view.AddBookDialog",
+          name: "sapui5task2.view.fragments.AddBookDialog",
         });
 
-        //this._resetValidationStates();
-        oModel.setProperty("/dialogBook", {
+        /*
+        oViewModel.setProperty("/dialogBook", {
           Name: "",
           Author: "",
           Genre: "",
           ReleaseDate: new Date().toISOString().split("T")[0],
           AvailableQuantity: 0,
         });
+
+        */
+        const oDialogBook = new JSONModel({
+          book: {
+            Name: "",
+            Author: "",
+            Genre: "",
+            ReleaseDate: new Date().toISOString().split("T")[0],
+            AvailableQuantity: 1,
+          },
+        });
+        this.oAddDialog.setModel(oDialogBook, "dialogBook");
         this.oAddDialog.open();
       },
 
-      /*
       _resetValidationStates: function () {
         const aInputIds = [
           "book_name_input",
@@ -230,8 +256,8 @@ sap.ui.define(
       },
 
       onValidateForm: function () {
-        const oModel = this.getMainModel();
-        const oDialogBook = oModel.getProperty("/dialogBook");
+        const oDialogModel = this.oAddDialog.getModel("dialogBook");
+        const oDialogBook = oDialogModel.getProperty("/book");
 
         const aFields = [
           {
@@ -269,6 +295,18 @@ sap.ui.define(
             const sValue = oControl.getValue();
             try {
               const oTypeInstance = new oField.type();
+
+              if (oField.value !== sValue) {
+                console.groupCollapsed(
+                  "%c Расхождение!",
+                  "color: red; font-weight: bold;",
+                );
+                console.log("Control ID: ", oControl.getId());
+                console.log("VALUE FROM MODEL = ", oField.value);
+                console.log("VALUE FROM VIEW = ", sValue);
+                console.groupEnd();
+              }
+
               oTypeInstance.validateValue(sValue);
               oControl.setValueState("None");
             } catch (oError) {
@@ -281,14 +319,12 @@ sap.ui.define(
           }
         });
 
-        //this.byId("dialog_button_on_confirm_add").setEnabled(bIsFormValid);
         return bIsFormValid;
       },
-      */
 
       _validateNewBook: function () {
-        const oModel = this.getMainModel();
-        const oDialogBook = oModel.getProperty("/dialogBook");
+        const oDialogModel = this.oAddDialog.getModel("dialogBook");
+        const oDialogBook = oDialogModel.getProperty("/book");
 
         const { Author, AvailableQuantity, Genre, Name, ReleaseDate } =
           oDialogBook;
@@ -332,12 +368,15 @@ sap.ui.define(
       },
 
       onConfirmAddBook: function () {
+
+         
         if (!this._validateNewBook()) {
           return;
         }
-
+         
         const oModel = this.getMainModel();
-        const oDialogBook = oModel.getProperty("/dialogBook");
+        const oDialogModel = this.oAddDialog.getModel("dialogBook");
+        const oDialogBook = oDialogModel.getProperty("/book");
 
         const aBooks = oModel.getProperty("/books");
         const sNewId = this._generateBookId();
@@ -349,7 +388,6 @@ sap.ui.define(
           Genre: oDialogBook.Genre,
           ReleaseDate: oDialogBook.ReleaseDate,
           AvailableQuantity: parseInt(oDialogBook.AvailableQuantity),
-          editMode: false,
         };
 
         aBooks.push(oNewBook);
@@ -384,51 +422,54 @@ sap.ui.define(
         MessageToast.show("Deleted");
       },
 
-      onBookSelect: function () {
-        const oTable = this.byId("booksTable");
+      onBookSelect: function (oEvent) {
+        const oTable = oEvent.getSource();
         const aSelectedItems = oTable.getSelectedItems();
-        const oDeleteButton = this.byId("delete_book_button");
-
-        oDeleteButton.setEnabled(aSelectedItems.length > 0);
+        const oViewModel = this.getModel("view");
+        const isRowsSelected = aSelectedItems.length > 0;
+        oViewModel.setProperty("/isRowsSelected", isRowsSelected);
       },
 
       onFilterByTitleAndGenre: function () {
         const oTable = this.byId("booksTable");
         const oBinding = oTable.getBinding("items");
 
+        const oViewModel = this.getModel("view");
+        const oFilters = oViewModel.getProperty("/filters");
+
         const aFilters = [];
-
-        const sTitle = this.byId("search_book_input").getValue();
-        if (sTitle) {
-          aFilters.push(new Filter("Name", FilterOperator.Contains, sTitle));
+        if (oFilters.title) {
+          aFilters.push(
+            new Filter("Name", FilterOperator.Contains, oFilters.title),
+          );
         }
 
-        const sGenre = this.byId("select_genre_select").getSelectedKey();
-        if (sGenre) {
-          aFilters.push(new Filter("Genre", FilterOperator.EQ, sGenre));
+        if (oFilters.genre) {
+          aFilters.push(new Filter("Genre", FilterOperator.EQ, oFilters.genre));
         }
+
         oBinding.filter(aFilters);
       },
 
-      onEditTitle: function (oEvent) {
-        const oBindingContext = oEvent.getSource().getBindingContext();
-        const oModel = this.getMainModel();
-        const sPath = oBindingContext.getPath();
+      onToggleEdit: function (oEvent) {
+        const oButton = oEvent.getSource();
+        const oBindingContext = oButton.getBindingContext();
+        const oViewModel = this.getModel("view");
+        const sID = oBindingContext.getProperty("ID");
+        const bCurrentMode = oViewModel.getProperty("/editMode");
 
-        oModel.setProperty(sPath + "/editMode", true);
-      },
+        oViewModel.setProperty("/editingBookId", sID);
 
-      onSaveTitle: function (oEvent) {
-        const oBindingContext = oEvent.getSource().getBindingContext();
-        const oModel = this.getMainModel();
-        const sPath = oBindingContext.getPath();
+        if (bCurrentMode) {
+          oViewModel.setProperty("/editingBookId", null);
+        }
 
-        oModel.setProperty(sPath + "/editMode", false);
+        oViewModel.setProperty("/editMode", !bCurrentMode);
       },
 
       onOpenCofirmDeleteDialog: async function () {
         this.oDialog ??= await this.loadFragment({
-          name: "sapui5task2.view.DeleteBooksDialog",
+          name: "sapui5task2.view.fragments.DeleteBooksDialog",
         });
 
         this.oDialog.open();
@@ -442,7 +483,6 @@ sap.ui.define(
       onCloseDeleteBooksDialog: function () {
         this.byId("delete_books_dialog").close();
         this.byId("booksTable").removeSelections();
-        this.byId("delete_book_button").setEnabled(false);
       },
     });
   },
