@@ -176,9 +176,6 @@ sap.ui.define(
 
           editingBookId: null,
           editMode: false,
-
-          dialogBook: {},
-          //editModes: {}
         });
 
         this.setMainModel(oModel);
@@ -215,16 +212,6 @@ sap.ui.define(
           name: "sapui5task2.view.fragments.AddBookDialog",
         });
 
-        /*
-        oViewModel.setProperty("/dialogBook", {
-          Name: "",
-          Author: "",
-          Genre: "",
-          ReleaseDate: new Date().toISOString().split("T")[0],
-          AvailableQuantity: 0,
-        });
-
-        */
         const oDialogBook = new JSONModel({
           book: {
             Name: "",
