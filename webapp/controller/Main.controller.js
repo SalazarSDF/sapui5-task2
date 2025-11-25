@@ -1,117 +1,14 @@
 sap.ui.define(
   [
     "sapui5task2/controller/BaseController",
+    "sapui5task2/controller/parts/types",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/model/SimpleType",
-    "sap/ui/model/ValidateException",
     "sap/m/MessageToast",
-    "sap/m/MessageBox",
   ],
-  (
-    BaseController,
-    JSONModel,
-    Filter,
-    FilterOperator,
-    SimpleType,
-    ValidateException,
-    MessageToast,
-    MessageBox,
-  ) => {
+  (BaseController, types, JSONModel, Filter, FilterOperator, MessageToast) => {
     "use strict";
-
-    const AuthorNameType = SimpleType.extend("AuthorNameType", {
-      formatValue: function (oValue) {
-        return oValue;
-      },
-      parseValue: function (oValue) {
-        return oValue;
-      },
-      validateValue: function (oValue) {
-        if (!oValue || oValue.trim() === "") {
-          throw new ValidateException("Author name is required");
-        }
-
-        const digitRegex = /\d/;
-        if (digitRegex.test(oValue)) {
-          throw new ValidateException("Author name cannot contain digits");
-        }
-
-        if (oValue.trim().length < 2) {
-          throw new ValidateException(
-            "Author name must be at least 2 characters long",
-          );
-        }
-      },
-    });
-
-    const RequiredStringType = SimpleType.extend("RequiredStringType", {
-      formatValue: function (oValue) {
-        return oValue;
-      },
-      parseValue: function (oValue) {
-        return oValue;
-      },
-      validateValue: function (oValue) {
-        if (!oValue || oValue.trim() === "") {
-          throw new ValidateException("This field is required");
-        }
-
-        if (oValue.trim().length < 2) {
-          throw new ValidateException("Must be at least 2 characters long");
-        }
-      },
-    });
-
-    const RequiredDateType = SimpleType.extend("RequiredDateType", {
-      formatValue: function (oValue) {
-        return oValue;
-      },
-      parseValue: function (oValue) {
-        return oValue;
-      },
-      validateValue: function (oValue) {
-        if (!oValue) {
-          throw new ValidateException("Date is required");
-        }
-
-        const selectedDate = new Date(oValue);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selectedDate > today) {
-          throw new ValidateException("Release date cannot be in the future");
-        }
-      },
-    });
-
-    const RequiredQuantityType = SimpleType.extend("RequiredQuantityType", {
-      formatValue: function (oValue) {
-        return oValue;
-      },
-      parseValue: function (oValue) {
-        return oValue;
-      },
-      validateValue: function (oValue) {
-        if (oValue === undefined || oValue === null) {
-          throw new ValidateException("Quantity is required");
-        }
-
-        if (oValue < 1) {
-          throw new ValidateException("Quantity must be at least 1");
-        }
-
-        if (oValue > 1000) {
-          throw new ValidateException("Quantity cannot exceed 1000");
-        }
-
-        if (!Number.isInteger(oValue)) {
-          throw new ValidateException("Quantity must be a whole number");
-        }
-      },
-    });
-
     return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
         if (BaseController.prototype.onInit) {
@@ -163,7 +60,7 @@ sap.ui.define(
         ];
 
         const oModel = new JSONModel({
-          books: aBooks,
+          books: aBooks.map((book) => ({ ...book, editMode: false })),
         });
 
         const oViewModel = new JSONModel({
@@ -173,9 +70,6 @@ sap.ui.define(
             title: "",
             genre: "",
           },
-
-          editingBookId: null,
-          editMode: false,
         });
 
         this.setMainModel(oModel);
@@ -183,12 +77,7 @@ sap.ui.define(
         this._initializeGenres();
       },
 
-      types: {
-        authorName: AuthorNameType,
-        requiredString: RequiredStringType,
-        requiredDate: RequiredDateType,
-        requiredQuantity: RequiredQuantityType,
-      },
+      types: types,
 
       _initializeGenres: function () {
         const oModel = this.getMainModel();
@@ -209,7 +98,7 @@ sap.ui.define(
 
       onOpenAddBookDialog: async function () {
         this.oAddDialog ??= await this.loadFragment({
-          name: "sapui5task2.view.fragments.AddBookDialog",
+          name: "sapui5task2.fragments.AddBookDialog",
         });
 
         const oDialogBook = new JSONModel({
@@ -219,121 +108,70 @@ sap.ui.define(
             Genre: "",
             ReleaseDate: new Date().toISOString().split("T")[0],
             AvailableQuantity: 1,
+            editMode: false,
+          },
+          validation: {
+            Name: "",
+            Author: "",
+            Genre: "",
+            ReleaseDate: "",
+            AvailableQuantity: "",
           },
         });
         this.oAddDialog.setModel(oDialogBook, "dialogBook");
         this.oAddDialog.open();
       },
 
-      _resetValidationStates: function () {
-        const aInputIds = [
-          "book_name_input",
-          "book_author_input",
-          "book_genre_input",
-          "book_release_date_picker",
-          "book_quantity_input",
-        ];
-
-        aInputIds.forEach((sId) => {
-          const oControl = this.byId(sId);
-          if (oControl) {
-            oControl.setValueState("None");
-          }
-        });
-      },
-
       onValidateForm: function () {
         const oDialogModel = this.oAddDialog.getModel("dialogBook");
         const oDialogBook = oDialogModel.getProperty("/book");
 
-        const aFields = [
+        const aFormFields = [
           {
             id: "book_name_input",
+            name: "Name",
             value: oDialogBook.Name,
-            type: RequiredStringType,
+            validateValue: types.requiredStringValidation,
           },
           {
             id: "book_author_input",
+            name: "Author",
             value: oDialogBook.Author,
-            type: AuthorNameType,
+            validateValue: types.authorNameValidation,
           },
           {
             id: "book_genre_input",
+            name: "Genre",
             value: oDialogBook.Genre,
-            type: RequiredStringType,
+            validateValue: types.requiredStringValidation,
           },
           {
             id: "book_release_date_picker",
+            name: "ReleaseDate",
             value: oDialogBook.ReleaseDate,
-            type: RequiredDateType,
+            validateValue: types.requiredDateValidation,
           },
           {
             id: "book_quantity_input",
+            name: "AvailableQuantity",
             value: oDialogBook.AvailableQuantity,
-            type: RequiredQuantityType,
+            validateValue: types.requiredQuantityValidation,
           },
         ];
 
-        let bIsFormValid = true;
-
-        aFields.forEach((oField) => {
+        aFormFields.forEach((oField) => {
           const oControl = this.byId(oField.id);
-          if (oControl) {
-            const sValue = oControl.getValue();
-            try {
-              const oTypeInstance = new oField.type();
-
-              if (oField.value !== sValue) {
-                console.groupCollapsed(
-                  "%c Расхождение!",
-                  "color: red; font-weight: bold;",
-                );
-                console.log("Control ID: ", oControl.getId());
-                console.log("VALUE FROM MODEL = ", oField.value);
-                console.log("VALUE FROM VIEW = ", sValue);
-                console.groupEnd();
-              }
-
-              oTypeInstance.validateValue(sValue);
-              oControl.setValueState("None");
-            } catch (oError) {
-              oControl.setValueState("Error");
-              if (oError.message) {
-                oControl.setValueStateText(oError.message);
-              }
-              bIsFormValid = false;
-            }
+          try {
+            oField.validateValue(oField.value);
+            oControl.setValueState("None");
+          } catch (oError) {
+            oControl.setValueState("Error");
+            oDialogModel.setProperty(
+              `/validation/${oField.name}`,
+              oError.message,
+            );
           }
         });
-
-        return bIsFormValid;
-      },
-
-      _validateNewBook: function () {
-        const oDialogModel = this.oAddDialog.getModel("dialogBook");
-        const oDialogBook = oDialogModel.getProperty("/book");
-
-        const { Author, AvailableQuantity, Genre, Name, ReleaseDate } =
-          oDialogBook;
-        let bIsValid = true;
-
-        try {
-          const authorName = new AuthorNameType();
-          const requiredString = new RequiredStringType();
-          const requiredDate = new RequiredDateType();
-          const requiredQuantity = new RequiredQuantityType();
-
-          authorName.validateValue(Author);
-          requiredString.validateValue(Genre);
-          requiredString.validateValue(Name);
-          requiredDate.validateValue(ReleaseDate);
-          requiredQuantity.validateValue(AvailableQuantity);
-        } catch (e) {
-          MessageBox.alert(e.message);
-          bIsValid = false;
-        }
-
-        return bIsValid;
       },
 
       _generateBookId: function () {
@@ -355,12 +193,6 @@ sap.ui.define(
       },
 
       onConfirmAddBook: function () {
-
-         
-        if (!this._validateNewBook()) {
-          return;
-        }
-         
         const oModel = this.getMainModel();
         const oDialogModel = this.oAddDialog.getModel("dialogBook");
         const oDialogBook = oDialogModel.getProperty("/book");
@@ -368,28 +200,14 @@ sap.ui.define(
         const aBooks = oModel.getProperty("/books");
         const sNewId = this._generateBookId();
 
-        const oNewBook = {
-          ID: sNewId,
-          Name: oDialogBook.Name,
-          Author: oDialogBook.Author,
-          Genre: oDialogBook.Genre,
-          ReleaseDate: oDialogBook.ReleaseDate,
-          AvailableQuantity: parseInt(oDialogBook.AvailableQuantity),
-        };
-
-        aBooks.push(oNewBook);
+        aBooks.push({...oDialogBook, "ID": sNewId});
         oModel.setProperty("/books", aBooks);
 
         MessageToast.show(
           `New book "${oDialogBook.Name}" added successfully with ID: ${sNewId}`,
         );
-        this.onCloseAddBookDialog();
-      },
 
-      onCloseAddBookDialog: function () {
-        if (this.oAddDialog) {
-          this.oAddDialog.close();
-        }
+        this.oAddDialog.close();
       },
 
       onDeleteBook: function () {
@@ -439,24 +257,17 @@ sap.ui.define(
       },
 
       onToggleEdit: function (oEvent) {
-        const oButton = oEvent.getSource();
-        const oBindingContext = oButton.getBindingContext();
-        const oViewModel = this.getModel("view");
-        const sID = oBindingContext.getProperty("ID");
-        const bCurrentMode = oViewModel.getProperty("/editMode");
+        const oBindingContext = oEvent.getSource().getBindingContext();
+        const oModel = this.getMainModel();
+        const sPath = oBindingContext.getPath();
+        const bCurrentEditMode = oModel.getProperty(sPath + "/editMode");
 
-        oViewModel.setProperty("/editingBookId", sID);
-
-        if (bCurrentMode) {
-          oViewModel.setProperty("/editingBookId", null);
-        }
-
-        oViewModel.setProperty("/editMode", !bCurrentMode);
+        oModel.setProperty(sPath + "/editMode", !bCurrentEditMode);
       },
 
       onOpenCofirmDeleteDialog: async function () {
         this.oDialog ??= await this.loadFragment({
-          name: "sapui5task2.view.fragments.DeleteBooksDialog",
+          name: "sapui5task2.fragments.DeleteBooksDialog",
         });
 
         this.oDialog.open();
@@ -464,10 +275,10 @@ sap.ui.define(
 
       onConfirmDeleteBooks: function () {
         this.onDeleteBook();
-        this.onCloseDeleteBooksDialog();
+        this._onCloseDeleteBooksDialog();
       },
 
-      onCloseDeleteBooksDialog: function () {
+      _onCloseDeleteBooksDialog: function () {
         this.byId("delete_books_dialog").close();
         this.byId("booksTable").removeSelections();
       },

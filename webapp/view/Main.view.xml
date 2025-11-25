@@ -124,13 +124,13 @@
                                 <Text
                                     id="book_cell_name"
                                     text="{Name}"
-                                    visible="{= ${view>/editingBookId} !== ${ID} }"
+                                    visible="{= !${editMode}}"
                                     class="sapUiTinyMarginEnd"
                                 />
                                 <Input
                                     id="book_cell_name_input"
                                     value="{Name}"
-                                    visible="{= ${view>/editingBookId} === ${ID} }"
+                                    visible="{= ${editMode}}"
                                     class="sapUiTinyMarginEnd"
                                 />
                             </HBox>
@@ -161,9 +161,9 @@
                             <HBox id="hbox_cell_edit_and_save">
                                 <Button
                                     id="hbox_cell_edit_and_save_button"
-                                    text="{= ${view>/editingBookId} === ${ID} ? 'Save' : 'Edit Title' }"
                                     press=".onToggleEdit"
-                                    type="{= ${view>/editingBookId} === ${ID}  ? 'Emphasized' : 'Default' }"
+                                    text="{= ${editMode} ? 'Save' : 'Edit Title' }"
+                                    type="{= ${editMode} ? 'Emphasized' : 'Default' }"
                                 />
                             </HBox>
                         </cells>

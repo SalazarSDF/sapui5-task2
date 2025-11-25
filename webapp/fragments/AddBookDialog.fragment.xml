@@ -36,12 +36,11 @@
                     <Input
                         id="book_name_input"
                         value="{
-                            type: '.types.requiredString',
                             path: 'dialogBook>/book/Name'
                         }"
                         placeholder="Enter Book Name"
                         change=".onValidateForm"
-                        valueStateText="Book name is required"
+                        valueStateText="{= ${dialogBook>/validation/Name}}"
                     />
                     <Label
                         id="book_author_label"
@@ -51,12 +50,11 @@
                     <Input
                         id="book_author_input"
                         value="{
-                            type: '.types.authorName',
                             path: 'dialogBook>/book/Author'
                         }"
                         placeholder="Enter Author Name"
                         change=".onValidateForm"
-                        valueStateText="Author name is required and cannot contain digits"
+                        valueStateText="{= ${dialogBook>/validation/Author}}"
                     />
 
                     <Label
@@ -67,12 +65,11 @@
                     <Input
                         id="book_genre_input"
                         value="{
-                            type: '.types.requiredString',
                             path: 'dialogBook>/book/Genre'
                         }"
                         placeholder="Enter Genre"
                         change=".onValidateForm"
-                        valueStateText="Genre is required"
+                        valueStateText="{= ${dialogBook>/validation/Genre}}"
                     />
 
                     <Label
@@ -83,12 +80,12 @@
                     <DatePicker
                         id="book_release_date_picker"
                         value="{
-                            type: '.types.requiredDate',
                             path: 'dialogBook>/book/ReleaseDate'
                         }"
                         valueFormat="yyyy-MM-dd"
+                        change=".onValidateForm"
                         displayFormat="long"
-                        valueStateText="Release date is required"
+                        valueStateText="{= ${dialogBook>/validation/ReleaseDate}}"
                     />
 
                     <Label
@@ -99,13 +96,12 @@
                     <StepInput
                         id="book_quantity_input"
                         value="{
-                            type: '.types.requiredQuantity',
                             path: 'dialogBook>/book/AvailableQuantity'
                         }"
                         min="1"
                         max="1000"
                         change=".onValidateForm"
-                        valueStateText="Quantity must be at least 1"
+                        valueStateText="{= ${dialogBook>/validation/AvailableQuantity}}"
                     />
                 </f:content>
             </f:SimpleForm>
@@ -116,6 +112,7 @@
                 text="Add"
                 type="Emphasized"
                 press=".onConfirmAddBook"
+                visible="{dialogBook>/validation/isValid}"
             />
         </beginButton>
         <endButton>
