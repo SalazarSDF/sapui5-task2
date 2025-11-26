@@ -40,7 +40,7 @@
                         }"
                         placeholder="Enter Book Name"
                         change=".onValidateForm"
-                        valueStateText="{= ${dialogBook>/validation/Name}}"
+                        valueStateText="{dialogBook>/validation/Name}"
                     />
                     <Label
                         id="book_author_label"
@@ -54,7 +54,7 @@
                         }"
                         placeholder="Enter Author Name"
                         change=".onValidateForm"
-                        valueStateText="{= ${dialogBook>/validation/Author}}"
+                        valueStateText="{dialogBook>/validation/Author}"
                     />
 
                     <Label
@@ -69,7 +69,7 @@
                         }"
                         placeholder="Enter Genre"
                         change=".onValidateForm"
-                        valueStateText="{= ${dialogBook>/validation/Genre}}"
+                        valueStateText="{dialogBook>/validation/Genre}"
                     />
 
                     <Label
@@ -85,7 +85,7 @@
                         valueFormat="yyyy-MM-dd"
                         change=".onValidateForm"
                         displayFormat="long"
-                        valueStateText="{= ${dialogBook>/validation/ReleaseDate}}"
+                        valueStateText="{dialogBook>/validation/ReleaseDate}"
                     />
 
                     <Label
@@ -101,7 +101,7 @@
                         min="1"
                         max="1000"
                         change=".onValidateForm"
-                        valueStateText="{= ${dialogBook>/validation/AvailableQuantity}}"
+                        valueStateText="{dialogBook>/validation/AvailableQuantity}"
                     />
                 </f:content>
             </f:SimpleForm>

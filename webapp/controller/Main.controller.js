@@ -131,31 +131,31 @@ sap.ui.define(
             id: "book_name_input",
             name: "Name",
             value: oDialogBook.Name,
-            validateValue: types.requiredStringValidation,
+            validateValue: types.validateStringField,
           },
           {
             id: "book_author_input",
             name: "Author",
             value: oDialogBook.Author,
-            validateValue: types.authorNameValidation,
+            validateValue: types.validateAuthorName,
           },
           {
             id: "book_genre_input",
             name: "Genre",
             value: oDialogBook.Genre,
-            validateValue: types.requiredStringValidation,
+            validateValue: types.validateStringField,
           },
           {
             id: "book_release_date_picker",
             name: "ReleaseDate",
             value: oDialogBook.ReleaseDate,
-            validateValue: types.requiredDateValidation,
+            validateValue: types.validateDateField,
           },
           {
             id: "book_quantity_input",
             name: "AvailableQuantity",
             value: oDialogBook.AvailableQuantity,
-            validateValue: types.requiredQuantityValidation,
+            validateValue: types.validateQuatityField,
           },
         ];
 
@@ -258,11 +258,8 @@ sap.ui.define(
 
       onToggleEdit: function (oEvent) {
         const oBindingContext = oEvent.getSource().getBindingContext();
-        const oModel = this.getMainModel();
-        const sPath = oBindingContext.getPath();
-        const bCurrentEditMode = oModel.getProperty(sPath + "/editMode");
-
-        oModel.setProperty(sPath + "/editMode", !bCurrentEditMode);
+        const bCurrentEditMode = oBindingContext.getProperty("editMode");
+        oBindingContext.setProperty('editMode', !bCurrentEditMode)
       },
 
       onOpenCofirmDeleteDialog: async function () {

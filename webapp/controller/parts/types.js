@@ -1,7 +1,7 @@
 sap.ui.define([], () => {
   "use strict";
   return {
-    authorNameValidation: function (oValue) {
+    validateAuthorName: function (oValue) {
       if (!oValue || oValue.trim() === "") {
         throw new Error("Author name is required");
       }
@@ -16,7 +16,7 @@ sap.ui.define([], () => {
       }
     },
 
-    requiredStringValidation: function (oValue) {
+    validateStringField: function (oValue) {
       if (!oValue || oValue.trim() === "") {
         throw new Error("This field is required");
       }
@@ -26,7 +26,7 @@ sap.ui.define([], () => {
       }
     },
 
-    requiredDateValidation: function (oValue) {
+    validateDateField: function (oValue) {
       if (!oValue) {
         throw new Error("Date is required");
       }
@@ -40,7 +40,7 @@ sap.ui.define([], () => {
       }
     },
 
-    requiredQuantityValidation: function (oValue) {
+    validateQuatityField: function (oValue) {
       if (oValue === undefined || oValue === null) {
         throw new Error("Quantity is required");
       }
