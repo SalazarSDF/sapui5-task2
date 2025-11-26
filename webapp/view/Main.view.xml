@@ -3,6 +3,9 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
+    core:require="{
+        Formatter: 'sapui5task2/model/formatter'
+    }"
 >
     <Page
         id="page"
@@ -144,12 +147,9 @@
                             />
                             <Text
                                 id="book_cell_date"
-                                core:require="{
-								    Formatter: 'sapui5task2/model/formatter'
-						        }"
                                 text="{
                                     path: 'ReleaseDate',
-                                    formatter: 'Formatter.formatYear'
+                                    formatter: 'Formatter.formatYear.bind($controller)'
                                 }"
                             />
                             <ObjectNumber
@@ -160,9 +160,9 @@
                                 <Button
                                     id="hbox_cell_edit_and_save_button"
                                     press=".onToggleEdit"
-                                    text="{= ${editMode} ? 'Save' : 'Edit Title' }"
+                                    
+                                    text="{= ${editMode} ? ${i18n>saveButton} : ${i18n>editTitleButton} }"
                                     type="{= ${editMode} ? 'Emphasized' : 'Default' }"
-                                    visible="{= !${editMode} }"
                                     class="sapUiTinyMarginEnd"
                                 />
                             </HBox>

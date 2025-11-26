@@ -75,6 +75,10 @@ sap.ui.define(
         this.setMainModel(oModel);
         this.setModel(oViewModel, "view");
         this._initializeGenres();
+
+        Object.keys(types).forEach((type) => {
+          types[type] = types[type].bind(this);
+        });
       },
 
       types: types,
@@ -200,13 +204,17 @@ sap.ui.define(
         const aBooks = oModel.getProperty("/books");
         const sNewId = this._generateBookId();
 
-        aBooks.push({...oDialogBook, "ID": sNewId});
+        aBooks.push({ ...oDialogBook, ID: sNewId });
         oModel.setProperty("/books", aBooks);
 
         MessageToast.show(
           `New book "${oDialogBook.Name}" added successfully with ID: ${sNewId}`,
         );
 
+        this.oAddDialog.close();
+      },
+
+      onCloseAddBookDialog: function () {
         this.oAddDialog.close();
       },
 
@@ -259,7 +267,7 @@ sap.ui.define(
       onToggleEdit: function (oEvent) {
         const oBindingContext = oEvent.getSource().getBindingContext();
         const bCurrentEditMode = oBindingContext.getProperty("editMode");
-        oBindingContext.setProperty('editMode', !bCurrentEditMode)
+        oBindingContext.setProperty("editMode", !bCurrentEditMode);
       },
 
       onOpenCofirmDeleteDialog: async function () {
@@ -272,10 +280,10 @@ sap.ui.define(
 
       onConfirmDeleteBooks: function () {
         this.onDeleteBook();
-        this._onCloseDeleteBooksDialog();
+        this.onCloseDeleteBooksDialog();
       },
 
-      _onCloseDeleteBooksDialog: function () {
+      onCloseDeleteBooksDialog: function () {
         this.byId("delete_books_dialog").close();
         this.byId("booksTable").removeSelections();
       },

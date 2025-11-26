@@ -119,7 +119,7 @@
             <Button
                 id="dialog_button_on_cancel_add"
                 text="{i18n>cancelButton}"
-                type="Emphasized"
+                type="Default"
                 press=".onCloseAddBookDialog"
             />
         </endButton>

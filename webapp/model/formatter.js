@@ -1,17 +1,16 @@
-sap.ui.define([], () => {
+sap.ui.define(["sap/ui/core/format/DateFormat"], (DateFormat) => {
   "use strict";
 
   return {
     formatYear: function (dateValue) {
-      const staticText = "Published: ";
-      if (!dateValue) return staticText + "Unknown";
-
-      let oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+      const oResourceBundle = this.getOwnerComponent()
+        .getModel("i18n")
+        .getResourceBundle();
+      let oDateFormat = DateFormat.getDateInstance({
         pattern: "yyyy",
       });
       let year = oDateFormat.format(new Date(dateValue));
-
-      return staticText + year;
+      return oResourceBundle.getText("publishedWithYear", year);
     },
   };
 });
