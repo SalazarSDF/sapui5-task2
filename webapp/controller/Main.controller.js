@@ -2,12 +2,13 @@ sap.ui.define(
   [
     "sapui5task2/controller/BaseController",
     "sapui5task2/controller/parts/types",
+    "sapui5task2/model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
   ],
-  (BaseController, types, JSONModel, Filter, FilterOperator, MessageToast) => {
+  (BaseController, types, Formatter, JSONModel, Filter, FilterOperator, MessageToast) => {
     "use strict";
     return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
@@ -82,6 +83,8 @@ sap.ui.define(
       },
 
       types: types,
+
+      formatter: Formatter,
 
       _initializeGenres: function () {
         const oModel = this.getMainModel();
