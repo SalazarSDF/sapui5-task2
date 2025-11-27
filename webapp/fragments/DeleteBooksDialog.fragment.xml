@@ -4,19 +4,19 @@
 >
     <Dialog
         id="delete_books_dialog"
-        title="Confirm Deletion"
+        title="{i18n>deleteDialogTitle}"
         type="Message"
     >
         <content>
             <Text
                 id="dialog_text_on_confirm_delete"
-                text="Are you sure you want to delete selected records?"
+                text="{i18n>deleteConfirmationText}"
             />
         </content>
         <beginButton>
             <Button
                 id="dialog_button_on_confirm_delete"
-                text="Yes"
+                text="{i18n>yesButton}"
                 type="Emphasized"
                 press=".onConfirmDeleteBooks"
             />
@@ -24,7 +24,7 @@
         <endButton>
             <Button
                 id="dialog_button_on_reject_delete"
-                text="No"
+                text="{i18n>noButton}"
                 type="Default"
                 press=".onCloseDeleteBooksDialog"
             />

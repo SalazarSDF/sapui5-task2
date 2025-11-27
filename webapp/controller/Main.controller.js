@@ -2,12 +2,13 @@ sap.ui.define(
   [
     "sapui5task2/controller/BaseController",
     "sapui5task2/controller/parts/types",
+    "sapui5task2/model/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
   ],
-  (BaseController, types, JSONModel, Filter, FilterOperator, MessageToast) => {
+  (BaseController, types, Formatter, JSONModel, Filter, FilterOperator, MessageToast) => {
     "use strict";
     return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
@@ -75,9 +76,15 @@ sap.ui.define(
         this.setMainModel(oModel);
         this.setModel(oViewModel, "view");
         this._initializeGenres();
+
+        Object.keys(types).forEach((type) => {
+          types[type] = types[type].bind(this);
+        });
       },
 
       types: types,
+
+      formatter: Formatter,
 
       _initializeGenres: function () {
         const oModel = this.getMainModel();
@@ -200,13 +207,17 @@ sap.ui.define(
         const aBooks = oModel.getProperty("/books");
         const sNewId = this._generateBookId();
 
-        aBooks.push({...oDialogBook, "ID": sNewId});
+        aBooks.push({ ...oDialogBook, ID: sNewId });
         oModel.setProperty("/books", aBooks);
 
         MessageToast.show(
           `New book "${oDialogBook.Name}" added successfully with ID: ${sNewId}`,
         );
 
+        this.oAddDialog.close();
+      },
+
+      onCloseAddBookDialog: function () {
         this.oAddDialog.close();
       },
 
@@ -259,7 +270,7 @@ sap.ui.define(
       onToggleEdit: function (oEvent) {
         const oBindingContext = oEvent.getSource().getBindingContext();
         const bCurrentEditMode = oBindingContext.getProperty("editMode");
-        oBindingContext.setProperty('editMode', !bCurrentEditMode)
+        oBindingContext.setProperty("editMode", !bCurrentEditMode);
       },
 
       onOpenCofirmDeleteDialog: async function () {
@@ -272,10 +283,10 @@ sap.ui.define(
 
       onConfirmDeleteBooks: function () {
         this.onDeleteBook();
-        this._onCloseDeleteBooksDialog();
+        this.onCloseDeleteBooksDialog();
       },
 
-      _onCloseDeleteBooksDialog: function () {
+      onCloseDeleteBooksDialog: function () {
         this.byId("delete_books_dialog").close();
         this.byId("booksTable").removeSelections();
       },
