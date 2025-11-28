@@ -51,6 +51,22 @@
         "settings": {
           "bundleName": "sapui5task2.i18n.i18n"
         }
+      },
+      "odataV2": {
+        "uri": "/mockServerV2/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadataV2.xml"
+        }
+      },
+      "odataV4": {
+        "uri": "/mockServerV4/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "localUri": "localService/metadataV4.xml"
+        }
       }
     },
     "resources": {
@@ -76,9 +92,7 @@
         {
           "name": "RouteMain",
           "pattern": ":?query:",
-          "target": [
-            "TargetMain"
-          ]
+          "target": ["TargetMain"]
         }
       ],
       "targets": {
