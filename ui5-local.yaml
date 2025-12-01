@@ -31,16 +31,16 @@ server:
         ignoreCertErrors: false # If set to true, certificate errors will be ignored. E.g. self-signed certificates will be accepted
 
     - name: sap-fe-mockserver
-      afterMiddleware: fiori-tools-proxy
+      beforeMiddleware: csp
       configuration:
         mountPath: /
         services:
           - urlPath: /mockServerV2
             metadataXmlPath: ./webapp/localService/metadataV2.xml
-            mockdataRootPath: ./webapp/localService/mockdata
-            generateMockData: true
+            mockdataRootPath: ./webapp/localService/mockdata_V2
+            generateMockData: false
 
           - urlPath: /mockServerV4
             metadataXmlPath: ./webapp/localService/metadataV4.xml
-            mockdataRootPath: ./webapp/localService/mockdata
-            generateMockData: true
+            mockdataRootPath: ./webapp/localService/mockdata_V4
+            generateMockData: false

@@ -7,6 +7,26 @@
     "applicationVersion": {
       "version": "0.0.1"
     },
+
+    "dataSources": {
+      "odataV2": {
+        "uri": "/mockServerV2/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadataV2.xml"
+        }
+      },
+      "odataV4": {
+        "uri": "/mockServerV4/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "localUri": "localService/metadataV4.xml"
+        }
+      }
+    },
+
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
     "resources": "resources.json",
@@ -53,20 +73,13 @@
         }
       },
       "odataV2": {
-        "uri": "/mockServerV2/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadataV2.xml"
-        }
+        "dataSource": "odataV2",
+        "type": "sap.ui.model.odata.v2.ODataModel"
       },
       "odataV4": {
-        "uri": "/mockServerV4/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "4.0",
-          "localUri": "localService/metadataV4.xml"
-        }
+        "dataSource": "odataV4",
+        "type": "sap.ui.model.odata.v4.ODataModel"
+
       }
     },
     "resources": {
