@@ -1,0 +1,47 @@
+[
+  {
+    "ID": 1,
+    "Name": "Wireless Keyboard",
+    "Description": "Ergonomic wireless keyboard with numeric keypad",
+    "ReleaseDate": "2020-01-01T00:00:00Z",
+    "DiscontinuedDate": null,
+    "Rating": 4.5,
+    "Price": 89.99
+  },
+  {
+    "ID": 2,
+    "Name": "Gaming Mouse",
+    "Description": "High-precision gaming mouse with RGB lighting",
+    "ReleaseDate": "2021-01-01T00:00:00Z",
+    "DiscontinuedDate": null,
+    "Rating": 4.8,
+    "Price": 129.99
+  },
+  {
+    "ID": 3,
+    "Name": "USB-C Hub",
+    "Description": "7-in-1 USB-C hub with HDMI and Ethernet",
+    "ReleaseDate": "2022-01-01T00:00:00Z",
+    "DiscontinuedDate": "2023-06-15T00:00:00Z",
+    "Rating": 4.2,
+    "Price": 59.99
+  },
+  {
+    "ID": 4,
+    "Name": "Bluetooth Speaker",
+    "Description": "Waterproof portable Bluetooth speaker",
+    "ReleaseDate": "2020-03-01T00:00:00Z",
+    "DiscontinuedDate": null,
+    "Rating": 4.6,
+    "Price": 79.99
+  },
+  {
+    "ID": 5,
+    "Name": "Monitor Stand",
+    "Description": "Adjustable monitor stand with USB ports",
+    "ReleaseDate": "2021-03-01T00:00:00Z",
+    "DiscontinuedDate": "2023-12-31T00:00:00Z",
+    "Rating": 4.3,
+    "Price": 149.99
+  }
+]

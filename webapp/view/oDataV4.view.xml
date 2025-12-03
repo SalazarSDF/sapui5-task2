@@ -1,0 +1,106 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+    <Table
+        id="productsTable"
+        items="{
+            path: 'odataV4>/Products'
+        }"
+        growing="true"
+        growingThreshold="10"
+        mode="MultiSelect"
+    >
+        <headerToolbar>
+            <OverflowToolbar id="products_table_Toolbar">
+                <Title
+                    id="products_counter_title"
+                    text="{i18n>productsTitle}"
+                    level="H2"
+                />
+                <ToolbarSpacer id="product_table_toolbar_spacer" />
+            </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+            <Column id="product_name_column">
+                <Text
+                    id="product_name_column_text"
+                    text="{i18n>productNameColumn}"
+                />
+            </Column>
+            <Column id="product_description_column">
+                <Text
+                    id="product_description_column_text"
+                    text="{i18n>productDescriptionColumn}"
+                />
+            </Column>
+            <Column id="product_release_date_column">
+                <Text
+                    id="product_release_column_text"
+                    text="{i18n>productReleaseDateColumn}"
+                />
+            </Column>
+            <Column id="product_discontinued_date_column">
+                <Text
+                    id="product_discontinued_column_text"
+                    text="{i18n>productDiscontinuedDateColumn}"
+                />
+            </Column>
+            <Column id="product_rating_column">
+                <Text
+                    id="product_rating_column_text"
+                    text="{i18n>productRatingColumn}"
+                />
+            </Column>
+            <Column id="product_price_column">
+                <Text
+                    id="product_price_column_text"
+                    text="{i18n>productPriceColumn}"
+                />
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem id="product_column_list_item">
+                <cells>
+                    <Text
+                        id="product_cell_name"
+                        text="{odataV4>Name}"
+                    />
+                    <Text
+                        id="product_cell_description"
+                        text="{odataV4>Description}"
+                    />
+                    <Text
+                        id="product_cell_release_date"
+                        text="{
+                            path: 'odataV4>ReleaseDate',
+                            type: 'sap.ui.model.odata.type.DateTimeOffset'
+                        }"
+                    />
+                    <Text
+                        id="product_cell_discontinued_date"
+                        text="{
+                            path: 'odataV4>DiscontinuedDate',
+                            type: 'sap.ui.model.odata.type.DateTimeOffset'
+                        }"
+                    />
+                    <ObjectNumber
+                        id="product_cell_rating"
+                        number="{odataV4>Rating}"
+                    />
+                    <ObjectNumber
+                        id="product_cell_price"
+                        number="{
+                            path: 'odataV4>Price',
+                            type: 'sap.ui.model.odata.type.Float',
+                            formatOptions: {
+                                decimals: 2
+                            }
+                        }"
+                    />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</mvc:View>
