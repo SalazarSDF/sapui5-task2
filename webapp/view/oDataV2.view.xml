@@ -28,7 +28,7 @@
                     icon="sap-icon://delete"
                     text="{i18n>deleteRecordButton}"
                     press=".onDeleteProducts"
-                    enabled="{= ${view>/isRowsSelected}}"
+                    enabled="{= ${view>/selectedRows}.length > 0}"
                 />
 
             </OverflowToolbar>

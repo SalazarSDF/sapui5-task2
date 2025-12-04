@@ -14,7 +14,7 @@ sap.ui.define(
         }
 
         const oViewModel = new JSONModel({
-          isRowsSelected: false,
+          selectedRows: [],
         });
 
         this.setModel(oViewModel, "view");
@@ -24,20 +24,19 @@ sap.ui.define(
         const oTable = oEvent.getSource();
         const aSelectedItems = oTable.getSelectedItems();
         const oViewModel = this.getModel("view");
-        const isRowsSelected = aSelectedItems.length > 0;
-        oViewModel.setProperty("/isRowsSelected", isRowsSelected);
+        oViewModel.setProperty("/selectedRows", aSelectedItems.map(item => item.getBindingContext("odataV2")));
       },
 
       onDeleteProducts: function () {
-        const oTable = this.byId("productsTableV2");
-        const aSelectedItems = oTable.getSelectedItems();
 
         const oModel = this.getView().getModel("odataV2");
+        const viewModel = this.getModel("view");
 
+        const aSelectedItems = viewModel.getProperty("/selectedRows");
         aSelectedItems.forEach((oItem) => {
-          const sPath = oItem.getBindingContext("odataV2").getPath();
-          oModel.remove(sPath);
+          oItem.delete();
         });
+        viewModel.setProperty("/selectedRows", []);
 
         oModel.submitChanges({
           success: () => {
@@ -55,7 +54,6 @@ sap.ui.define(
             );
           },
         });
-        oTable.removeSelections();
       },
     });
   },
