@@ -49,5 +49,27 @@ sap.ui.define([], () => {
         throw new Error(oResourceBundle.getText("dateNotFuture"));
       }
     },
+
+    validateQuatityField: function (oValue) {
+      const oResourceBundle = this.getOwnerComponent()
+        .getModel("i18n")
+        .getResourceBundle();
+
+      if (oValue === undefined || oValue === null) {
+        throw new Error(oResourceBundle.getText("quantityRequired"));
+      }
+
+      if (oValue < 1) {
+        throw new Error(oResourceBundle.getText("quantityMin"));
+      }
+
+      if (oValue > 1000) {
+        throw new Error(oResourceBundle.getText("quantityMax"));
+      }
+
+      if (!Number.isInteger(oValue)) {
+        throw new Error(oResourceBundle.getText("quantityInteger"));
+      }
+    },
   };
 });
