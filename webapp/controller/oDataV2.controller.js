@@ -154,12 +154,6 @@ sap.ui.define(
         oDialogModel.setProperty(`/validation/isValid`, Object.keys(errors).length === 0);
       },
 
-      _formatReleaseDate: function (date) {
-        date = new Date(date);
-        if (!date) return null;
-        return "/Date(" + date.getTime() + ")/";
-      },
-
       onConfirmAddProduct: function () {
         const oDialogModel = this.oAddDialog.getModel("dialogProduct");
         const oDialogProduct = oDialogModel.getProperty("/product");
