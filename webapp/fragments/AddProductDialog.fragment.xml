@@ -1,0 +1,144 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id="add_product_dialog"
+        title="{i18n>addProductDialogTitle}"
+        type="Message"
+    >
+        <content>
+            <f:SimpleForm
+                id="add_product_form"
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="2"
+                columnsL="2"
+                columnsM="2"
+                singleContainerFullSize="false"
+            >
+                <f:content>
+                    <Label
+                        id="product_name_label"
+                        text="{i18n>productNameLabel}"
+                        required="true"
+                    />
+                    <Input
+                        id="product_name_input"
+                        value="{
+                            path: 'dialogProduct>/product/Name'
+                        }"
+                        placeholder="{i18n>productNamePlaceholder}"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Name}"
+                    />
+                    <Label
+                        id="product_description_label"
+                        text="{i18n>productDescriptionLabel}"
+                        required="true"
+                    />
+                    <TextArea
+                        id="product_description_input"
+                        value="{
+                            path: 'dialogProduct>/product/Description'
+                        }"
+                        placeholder="{i18n>productDescriptionPlaceholder}"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Description}"
+                    />
+
+                    <Label
+                        id="product_release_date_label"
+                        text="{i18n>productReleaseDateLabel}"
+                        required="true"
+                    />
+                    <DatePicker
+                        id="product_release_date_picker"
+                        value="{
+                            path: 'dialogProduct>/product/ReleaseDate'
+                        }"
+                        valueFormat="yyyy-MM-dd"
+                        change=".onValidateForm"
+                        displayFormat="long"
+                        valueStateText="{dialogProduct>/validation/ReleaseDate}"
+                    />
+
+                    <Label
+                        id="product_discontinued_date_label"
+                        text="{i18n>productDiscontinuedDateLabel}"
+                    />
+                    <DatePicker
+                        id="product_discontinued_date_picker"
+                        value="{
+                            path: 'dialogProduct>/product/DiscontinuedDate',
+                            constraints: { nullable: true }
+                        }"
+                        valueFormat="yyyy-MM-dd"
+                        change=".onValidateForm"
+                        displayFormat="long"
+                        valueStateText="{dialogProduct>/validation/DiscontinuedDate}"
+                    />
+
+                    <Label
+                        id="product_rating_label"
+                        text="{i18n>productRatingLabel}"
+                        required="true"
+                    />
+                    <StepInput
+                        id="product_rating_input"
+                        value="{
+                            path: 'dialogProduct>/product/Rating'
+                        }"
+                        min="1"
+                        max="5"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Rating}"
+                    />
+
+                    <Label
+                        id="product_price_label"
+                        text="{i18n>productPriceLabel}"
+                        required="true"
+                    />
+                    <Input
+                        id="product_price_input"
+                        type="Number"
+                        value="{
+                            path: 'dialogProduct>/product/Price'
+                        }"
+                        placeholder="{i18n>productPricePlaceholder}"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Price}"
+                    />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button
+                id="dialog_button_on_confirm_add"
+                text="{i18n>addButton}"
+                type="Emphasized"
+                press=".onConfirmAddProduct"
+                visible="{dialogProduct>/validation/isValid}"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                id="dialog_button_on_cancel_add"
+                text="{i18n>cancelButton}"
+                type="Default"
+                press=".onCloseAddProductDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
