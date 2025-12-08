@@ -36,11 +36,12 @@
                     <Input
                         id="product_name_input"
                         value="{
-                            path: 'dialogProduct>/product/Name'
+                        path: 'odataV2>Name',
+                            mode: 'TwoWay'
                         }"
                         placeholder="{i18n>productNamePlaceholder}"
                         change=".onValidateForm"
-                        valueStateText="{dialogProduct>/validation/Name}"
+                        valueStateText="{dialogProduct>/validation/Name/errorMessage}"
                     />
                     <Label
                         id="product_description_label"
@@ -50,11 +51,12 @@
                     <TextArea
                         id="product_description_input"
                         value="{
-                            path: 'dialogProduct>/product/Description'
+                        path: 'odataV2>Description',
+                            mode: 'TwoWay'
                         }"
                         placeholder="{i18n>productDescriptionPlaceholder}"
                         change=".onValidateForm"
-                        valueStateText="{dialogProduct>/validation/Description}"
+                        valueStateText="{dialogProduct>/validation/Description/errorMessage}"
                     />
 
                     <Label
@@ -65,12 +67,14 @@
                     <DatePicker
                         id="product_release_date_picker"
                         value="{
-                            path: 'dialogProduct>/product/ReleaseDate'
+                            path: 'odataV2>ReleaseDate',
+                            mode: 'TwoWay',
+                            type: 'sap.ui.model.type.Date'  
                         }"
                         valueFormat="yyyy-MM-dd"
                         change=".onValidateForm"
                         displayFormat="long"
-                        valueStateText="{dialogProduct>/validation/ReleaseDate}"
+                        valueStateText="{dialogProduct>/validation/ReleaseDate/errorMessage}"
                     />
 
                     <Label
@@ -80,13 +84,15 @@
                     <DatePicker
                         id="product_discontinued_date_picker"
                         value="{
-                            path: 'dialogProduct>/product/DiscontinuedDate',
-                            constraints: { nullable: true }
+                        path: 'odataV2>DiscontinuedDate',
+                            mode: 'TwoWay',
+                            constraints: { nullable: true },
+                            type: 'sap.ui.model.type.Date'  
                         }"
                         valueFormat="yyyy-MM-dd"
                         change=".onValidateForm"
                         displayFormat="long"
-                        valueStateText="{dialogProduct>/validation/DiscontinuedDate}"
+                        valueStateText="{dialogProduct>/validation/DiscontinuedDate/errorMessage}"
                     />
 
                     <Label
@@ -97,12 +103,13 @@
                     <StepInput
                         id="product_rating_input"
                         value="{
-                            path: 'dialogProduct>/product/Rating'
+                        path: 'odataV2>Rating',
+                            mode: 'TwoWay'
                         }"
                         min="1"
                         max="5"
                         change=".onValidateForm"
-                        valueStateText="{dialogProduct>/validation/Rating}"
+                        valueStateText="{dialogProduct>/validation/Rating/errorMessage}"
                     />
 
                     <Label
@@ -114,11 +121,12 @@
                         id="product_price_input"
                         type="Number"
                         value="{
-                            path: 'dialogProduct>/product/Price'
+                        path: 'odataV2>Price',
+                            mode: 'TwoWay'
                         }"
                         placeholder="{i18n>productPricePlaceholder}"
                         change=".onValidateForm"
-                        valueStateText="{dialogProduct>/validation/Price}"
+                        valueStateText="{dialogProduct>/validation/Price/errorMessage}"
                     />
                 </f:content>
             </f:SimpleForm>
@@ -129,7 +137,6 @@
                 text="{i18n>addButton}"
                 type="Emphasized"
                 press=".onConfirmAddProduct"
-                visible="{dialogProduct>/validation/isValid}"
             />
         </beginButton>
         <endButton>

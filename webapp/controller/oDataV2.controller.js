@@ -69,22 +69,28 @@ sap.ui.define(
           name: "sapui5task2.fragments.AddProductDialog",
         });
 
+        const oODataModel = this.getModel("odataV2");
+        const oInitialProperties = {
+          Name: "",
+          Description: "",
+          ReleaseDate: "",
+          DiscontinuedDate: null,
+          Rating: 2.5,
+          Price: 0.0,
+        };
+        const oContext = oODataModel.createEntry("/Products", {
+          properties: oInitialProperties,
+        });
+        this.oAddDialog.setBindingContext(oContext, "odataV2");
+
         const oDialogProduct = new JSONModel({
-          product: {
-            Name: "",
-            Description: "",
-            ReleaseDate: new Date().toISOString().split("T")[0],
-            DiscontinuedDate: null,
-            Rating: 2.5,
-            Price: 0.0,
-          },
           validation: {
-            Name: "",
-            Description: "",
-            ReleaseDate: "",
-            DiscontinuedDate: null,
-            Rating: 2.5,
-            Price: 0.0,
+            Name: { errorMessage: "", isTouched: false },
+            Description: { errorMessage: "", isTouched: false },
+            ReleaseDate: { errorMessage: "", isTouched: false },
+            DiscontinuedDate: { errorMessage: "", isTouched: false },
+            Rating: { errorMessage: "", isTouched: false },
+            Price: { errorMessage: "", isTouched: false },
             isValid: false,
           },
         });
@@ -92,9 +98,13 @@ sap.ui.define(
         this.oAddDialog.open();
       },
 
-      onValidateForm: function () {
+      onValidateForm: function (oEvent) {
         const oDialogModel = this.oAddDialog.getModel("dialogProduct");
-        const oDialogProduct = oDialogModel.getProperty("/product");
+        const oValidation = oDialogModel.getProperty("/validation");
+
+        const oContext = this.oAddDialog.getBindingContext("odataV2");
+        const oDialogProduct = oContext.getObject();
+
         const aFormFields = [
           {
             id: "product_name_input",
@@ -132,45 +142,57 @@ sap.ui.define(
             value: oDialogProduct.Price,
             validateValue: productV2Types.validatePrice,
           },
-        ];
+        ].map((formField) => ({
+          ...formField,
+          isTouched: oValidation[formField.name].isTouched,
+        }));
+
+        const sChangedId = oEvent.getSource().getId().split("--").pop();
+        const oChangedField = aFormFields.find(
+          (oField) => oField.id === sChangedId,
+        );
+        oChangedField.isTouched = true;
+        oDialogModel.setProperty(
+          `/validation/${oChangedField.name}/isTouched`,
+          true,
+        );
 
         const errors = {};
 
         aFormFields.forEach((oField) => {
-          const oControl = this.byId(oField.id);
-          try {
-            oField.validateValue(oField.value);
-            oControl.setValueState("None");
-          } catch (oError) {
-            oControl.setValueState("Error");
-            oDialogModel.setProperty(
-              `/validation/${oField.name}`,
-              oError.message,
-            );
-            errors[oField.name] = oError.message;
+          if (oField.isTouched) {
+            const oControl = this.byId(oField.id);
+            try {
+              oField.validateValue(oField.value);
+              oControl.setValueState("None");
+            } catch (oError) {
+              oControl.setValueState("Error");
+              oDialogModel.setProperty(
+                `/validation/${oField.name}/errorMessage`,
+                oError.message,
+              );
+              errors[oField.name] = oError.message;
+            }
           }
         });
 
-        oDialogModel.setProperty(`/validation/isValid`, Object.keys(errors).length === 0);
+        oDialogModel.setProperty(
+          `/validation/isValid`,
+          Object.keys(errors).length === 0,
+        );
       },
 
       onConfirmAddProduct: function () {
         const oDialogModel = this.oAddDialog.getModel("dialogProduct");
-        const oDialogProduct = oDialogModel.getProperty("/product");
 
-        const oNewProduct = {
-          Name: oDialogProduct.Name,
-          Description: oDialogProduct.Description,
-          ReleaseDate: new Date(oDialogProduct.ReleaseDate),
-          DiscontinuedDate: oDialogProduct.DiscontinuedDate
-            ? new Date(oDialogProduct.DiscontinuedDate)
-            : null,
-          Price: parseFloat(oDialogProduct.Price),
-          Rating: parseFloat(oDialogProduct.Rating),
-        };
+        if (!oDialogModel.getProperty("/validation/isValid")) {
+          MessageBox.error(this.getResourceBundle().getText("createFailedMessage"),);
+          return;
+        }
+        const oContext = this.oAddDialog.getBindingContext("odataV2");
 
         const oModel = this.getModel("odataV2");
-        oModel.create("/Products", oNewProduct, {
+        oModel.submitChanges({
           success: () => {
             MessageToast.show(
               this.getResourceBundle().getText("addSuccessMessage"),
@@ -178,12 +200,19 @@ sap.ui.define(
             this.onCloseAddProductDialog();
           },
           error: (oError) => {
+            oModel.deleteCreatedEntry(oContext);
             MessageBox.error("Error: " + oError.message);
           },
         });
       },
 
       onCloseAddProductDialog: function () {
+        const oContext = this.oAddDialog.getBindingContext("odataV2");
+
+        if (oContext && oContext.isTransient()) {
+          const oModel = this.getModel("odataV2");
+          oModel.deleteCreatedEntry(oContext);
+        }
         this.oAddDialog.close();
       },
     });
