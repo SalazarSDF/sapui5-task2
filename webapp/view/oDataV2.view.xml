@@ -3,6 +3,7 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
+    core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
     <Table
         id="productsTableV2"
@@ -22,6 +23,13 @@
                     level="H2"
                 />
                 <ToolbarSpacer id="product_table_toolbar_spacerV2" />
+
+                <Button
+                    id="add_product_button"
+                    icon="sap-icon://add"
+                    text="{i18n>addRecordButton}"
+                    press=".onOpenAddProductDialog"
+                />
 
                 <Button
                     id="delete_button_V2"
@@ -101,18 +109,22 @@
                         }"
                     />
 
-                    <ObjectNumber
+                    <RatingIndicator
                         id="product_cell_ratingV2"
-                        number="{odataV2>Rating}"
+                        value="{odataV2>Rating}"
+                        editable="false"
+                        enabled="false"
+                        iconSize="12px"
+                        maxValue="5"
                     />
                     <ObjectNumber
                         id="product_cell_priceV2"
                         number="{
                             path: 'odataV2>Price',
-                                type: 'sap.ui.model.type.Float',
-                                formatOptions: {
-                                    decimals: 2
-                                }
+                            type: 'FloatType',
+                            formatOptions: {
+					                      minIntegerDigits: 2
+				                    }
                         }"
                     />
                 </cells>
