@@ -75,7 +75,7 @@ sap.ui.define(
           Description: "",
           ReleaseDate: "",
           DiscontinuedDate: null,
-          Rating: 2.5,
+          Rating: 2,
           Price: 0.0,
         };
         const oContext = oODataModel.createEntry("/Products", {
@@ -160,19 +160,21 @@ sap.ui.define(
         const errors = {};
 
         aFormFields.forEach((oField) => {
-          if (oField.isTouched) {
-            const oControl = this.byId(oField.id);
-            try {
-              oField.validateValue(oField.value);
+          const oControl = this.byId(oField.id);
+          try {
+            oField.validateValue(oField.value);
+            if (oField.isTouched) {
               oControl.setValueState("None");
-            } catch (oError) {
-              oControl.setValueState("Error");
-              oDialogModel.setProperty(
-                `/validation/${oField.name}/errorMessage`,
-                oError.message,
-              );
-              errors[oField.name] = oError.message;
             }
+          } catch (oError) {
+            if (oField.isTouched) {
+              oControl.setValueState("Error");
+            }
+            oDialogModel.setProperty(
+              `/validation/${oField.name}/errorMessage`,
+              oError.message,
+            );
+            errors[oField.name] = oError.message;
           }
         });
 
@@ -186,7 +188,9 @@ sap.ui.define(
         const oDialogModel = this.oAddDialog.getModel("dialogProduct");
 
         if (!oDialogModel.getProperty("/validation/isValid")) {
-          MessageBox.error(this.getResourceBundle().getText("createFailedMessage"),);
+          MessageBox.error(
+            this.getResourceBundle().getText("createFailedMessage"),
+          );
           return;
         }
         const oContext = this.oAddDialog.getBindingContext("odataV2");

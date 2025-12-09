@@ -36,8 +36,7 @@
                     <Input
                         id="product_name_input"
                         value="{
-                        path: 'odataV2>Name',
-                            mode: 'TwoWay'
+                            path: 'odataV2>Name'
                         }"
                         placeholder="{i18n>productNamePlaceholder}"
                         change=".onValidateForm"
@@ -51,8 +50,7 @@
                     <TextArea
                         id="product_description_input"
                         value="{
-                        path: 'odataV2>Description',
-                            mode: 'TwoWay'
+                            path: 'odataV2>Description'
                         }"
                         placeholder="{i18n>productDescriptionPlaceholder}"
                         change=".onValidateForm"
@@ -68,7 +66,6 @@
                         id="product_release_date_picker"
                         value="{
                             path: 'odataV2>ReleaseDate',
-                            mode: 'TwoWay',
                             type: 'sap.ui.model.type.Date'  
                         }"
                         valueFormat="yyyy-MM-dd"
@@ -85,7 +82,6 @@
                         id="product_discontinued_date_picker"
                         value="{
                         path: 'odataV2>DiscontinuedDate',
-                            mode: 'TwoWay',
                             constraints: { nullable: true },
                             type: 'sap.ui.model.type.Date'  
                         }"
@@ -103,8 +99,7 @@
                     <StepInput
                         id="product_rating_input"
                         value="{
-                        path: 'odataV2>Rating',
-                            mode: 'TwoWay'
+                            path: 'odataV2>Rating'
                         }"
                         min="1"
                         max="5"
@@ -121,8 +116,7 @@
                         id="product_price_input"
                         type="Number"
                         value="{
-                        path: 'odataV2>Price',
-                            mode: 'TwoWay'
+                            path: 'odataV2>Price'
                         }"
                         placeholder="{i18n>productPricePlaceholder}"
                         change=".onValidateForm"
