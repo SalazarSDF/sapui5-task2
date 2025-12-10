@@ -64,9 +64,9 @@ sap.ui.define(
         });
       },
 
-      onOpenAddProductDialog: async function () {
-        this.oAddDialog ??= await this.loadFragment({
-          name: "sapui5task2.fragments.AddProductDialog",
+      onOpenProductDialog: async function (sMode, oContext = null) {
+        this.oProductDialog ??= await this.loadFragment({
+          name: "sapui5task2.fragments.ProductDialog",
         });
 
         const oODataModel = this.getModel("odataV2");
@@ -78,12 +78,16 @@ sap.ui.define(
           Rating: 2,
           Price: 0.0,
         };
-        const oContext = oODataModel.createEntry("/Products", {
-          properties: oInitialProperties,
-        });
-        this.oAddDialog.setBindingContext(oContext, "odataV2");
+
+        if (sMode === "add") {
+          oContext = oODataModel.createEntry("/Products", {
+            properties: oInitialProperties,
+          });
+        }
+        this.oProductDialog.setBindingContext(oContext, "odataV2");
 
         const oDialogProduct = new JSONModel({
+          mode: sMode,
           validation: {
             Name: { errorMessage: "", isTouched: false },
             Description: { errorMessage: "", isTouched: false },
@@ -94,15 +98,16 @@ sap.ui.define(
             isValid: false,
           },
         });
-        this.oAddDialog.setModel(oDialogProduct, "dialogProduct");
-        this.oAddDialog.open();
+        this.oProductDialog.setModel(oDialogProduct, "dialogProduct");
+        this.oProductDialog.open();
+        this.onValidateForm();
       },
 
-      onValidateForm: function (oEvent) {
-        const oDialogModel = this.oAddDialog.getModel("dialogProduct");
+      onValidateForm: function (oEvent, bForce) {
+        const oDialogModel = this.oProductDialog.getModel("dialogProduct");
         const oValidation = oDialogModel.getProperty("/validation");
 
-        const oContext = this.oAddDialog.getBindingContext("odataV2");
+        const oContext = this.oProductDialog.getBindingContext("odataV2");
         const oDialogProduct = oContext.getObject();
 
         const aFormFields = [
@@ -147,15 +152,28 @@ sap.ui.define(
           isTouched: oValidation[formField.name].isTouched,
         }));
 
-        const sChangedId = oEvent.getSource().getId().split("--").pop();
-        const oChangedField = aFormFields.find(
-          (oField) => oField.id === sChangedId,
-        );
-        oChangedField.isTouched = true;
-        oDialogModel.setProperty(
-          `/validation/${oChangedField.name}/isTouched`,
-          true,
-        );
+        if (oEvent) {
+          const sChangedId = oEvent.getSource().getId().split("--").pop();
+          const oChangedField = aFormFields.find(
+            (oField) => oField.id === sChangedId,
+          );
+          if (oChangedField) {
+            oChangedField.isTouched = true;
+            oDialogModel.setProperty(
+              `/validation/${oChangedField.name}/isTouched`,
+              true,
+            );
+          }
+        }
+        if (bForce) {
+          aFormFields.forEach((oField) => {
+            oField.isTouched = true;
+            oDialogModel.setProperty(
+              `/validation/${oField.name}/isTouched`,
+              true,
+            );
+          });
+        }
 
         const errors = {};
 
@@ -184,24 +202,30 @@ sap.ui.define(
         );
       },
 
-      onConfirmAddProduct: function () {
-        const oDialogModel = this.oAddDialog.getModel("dialogProduct");
+      onConfirmProduct: function () {
+        this.onValidateForm(null, true);
+
+        const oDialogModel = this.oProductDialog.getModel("dialogProduct");
 
         if (!oDialogModel.getProperty("/validation/isValid")) {
           MessageBox.error(
-            this.getResourceBundle().getText("createFailedMessage"),
+            this.getResourceBundle().getText("saveFailedMessage"),
           );
           return;
         }
-        const oContext = this.oAddDialog.getBindingContext("odataV2");
 
+        const sMode = oDialogModel.getProperty("/mode");
+        const oContext = this.oProductDialog.getBindingContext("odataV2");
         const oModel = this.getModel("odataV2");
+
         oModel.submitChanges({
           success: () => {
             MessageToast.show(
-              this.getResourceBundle().getText("addSuccessMessage"),
+              this.getResourceBundle().getText(
+                sMode === "add" ? "addSuccessMessage" : "editSuccessMessage",
+              ),
             );
-            this.onCloseAddProductDialog();
+            this.onCloseProductDialog();
           },
           error: (oError) => {
             oModel.deleteCreatedEntry(oContext);
@@ -210,14 +234,22 @@ sap.ui.define(
         });
       },
 
-      onCloseAddProductDialog: function () {
-        const oContext = this.oAddDialog.getBindingContext("odataV2");
+      onCloseProductDialog: function () {
+        const oContext = this.oProductDialog.getBindingContext("odataV2");
+        const oModel = this.getModel("odataV2");
 
         if (oContext && oContext.isTransient()) {
-          const oModel = this.getModel("odataV2");
           oModel.deleteCreatedEntry(oContext);
+        } else {
+          oModel.resetChanges();
         }
-        this.oAddDialog.close();
+        this.oProductDialog.close();
+      },
+
+      onEditProduct: function (oEvent) {
+        const oItem = oEvent.getSource().getParent();
+        const oContext = oItem.getBindingContext("odataV2");
+        this.onOpenProductDialog("edit", oContext);
       },
     });
   },
