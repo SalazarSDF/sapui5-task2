@@ -28,7 +28,7 @@
                     id="add_product_button"
                     icon="sap-icon://add"
                     text="{i18n>addRecordButton}"
-                    press=".onOpenAddProductDialog"
+                    press=".onOpenProductDialog('add')"
                 />
 
                 <Button
@@ -78,6 +78,14 @@
                     text="{i18n>productPriceColumn}"
                 />
             </Column>
+
+            <Column id="actions_columnV2">
+                <Text
+                    id="actions_column_textV2"
+                    text="{i18n>productActionsColumn}"
+                />
+            </Column>
+
         </columns>
         <items>
             <ColumnListItem id="product_column_list_itemV2">
@@ -126,6 +134,11 @@
 					                      minIntegerDigits: 2
 				                    }
                         }"
+                    />
+                    <Button
+                        id="edit_product_buttonV2"
+                        text="{i18n>editButton}"
+                        press=".onEditProduct"
                     />
                 </cells>
             </ColumnListItem>
