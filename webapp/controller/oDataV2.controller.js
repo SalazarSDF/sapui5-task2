@@ -33,6 +33,8 @@ sap.ui.define(
         Object.keys(productV2Types).forEach((type) => {
           productV2Types[type] = productV2Types[type].bind(this);
         });
+
+        this.resourceBundle = this.getResourceBundle();
       },
       productV2Types: productV2Types,
 
@@ -59,16 +61,12 @@ sap.ui.define(
         oModel.submitChanges({
           success: () => {
             MessageToast.show(
-              this.getI18nText("deleteSuccessMessage", [
-                aSelectedItems.length,
-              ]),
+              this.getI18nText("deleteSuccessMessage", [aSelectedItems.length]),
             );
           },
           error: (oError) => {
             MessageBox.error(
-              this.getI18nText("deleteFailedMessage") +
-                ": " +
-                oError.message,
+              this.getI18nText("deleteFailedMessage") + ": " + oError.message,
             );
           },
         });
@@ -218,9 +216,7 @@ sap.ui.define(
         const oDialogModel = this.oProductDialog.getModel("dialogProduct");
 
         if (!oDialogModel.getProperty("/validation/isValid")) {
-          MessageBox.error(
-            this.getI18nText("saveFailedMessage"),
-          );
+          MessageBox.error(this.getI18nText("saveFailedMessage"));
           return;
         }
 
@@ -275,6 +271,5 @@ sap.ui.define(
         oBinding.filter([]);
       },
     });
-    //TODO: check todo
   },
 );
