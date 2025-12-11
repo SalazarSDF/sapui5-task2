@@ -46,6 +46,15 @@
                     liveChange=".onFilterProducts"
                 />
 
+                <ComboBox
+                    id="sort_combo_box"
+                    placeholder="{i18n>sortProductPlaceholder}"
+                    change=".onSortChange"
+                    items="{path: 'view>/sortOptions'}"
+                >
+                <core:Item key="{view>key}" text="{view>text}" />
+                </ComboBox>
+
 
             </OverflowToolbar>
         </headerToolbar>
