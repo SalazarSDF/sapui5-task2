@@ -33,8 +33,6 @@ sap.ui.define(
         Object.keys(productV2Types).forEach((type) => {
           productV2Types[type] = productV2Types[type].bind(this);
         });
-
-        this.resourceBundle = this.getResourceBundle();
       },
       productV2Types: productV2Types,
 
