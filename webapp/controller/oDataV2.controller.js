@@ -5,8 +5,18 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel",
     "sapui5task2/controller/parts/productV2Types",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
   ],
-  (BaseController, MessageBox, MessageToast, JSONModel, productV2Types) => {
+  (
+    BaseController,
+    MessageBox,
+    MessageToast,
+    JSONModel,
+    productV2Types,
+    Filter,
+    FilterOperator,
+  ) => {
     "use strict";
     return BaseController.extend("sapui5task2.controller.oDataV2", {
       onInit() {
@@ -49,16 +59,12 @@ sap.ui.define(
         oModel.submitChanges({
           success: () => {
             MessageToast.show(
-              this.getResourceBundle().getText("deleteSuccessMessage", [
-                aSelectedItems.length,
-              ]),
+              this.getI18nText("deleteSuccessMessage", [aSelectedItems.length]),
             );
           },
           error: (oError) => {
             MessageBox.error(
-              this.getResourceBundle().getText("deleteFailedMessage") +
-                ": " +
-                oError.message,
+              this.getI18nText("deleteFailedMessage") + ": " + oError.message,
             );
           },
         });
@@ -208,9 +214,7 @@ sap.ui.define(
         const oDialogModel = this.oProductDialog.getModel("dialogProduct");
 
         if (!oDialogModel.getProperty("/validation/isValid")) {
-          MessageBox.error(
-            this.getResourceBundle().getText("saveFailedMessage"),
-          );
+          MessageBox.error(this.getI18nText("saveFailedMessage"));
           return;
         }
 
@@ -221,7 +225,7 @@ sap.ui.define(
         oModel.submitChanges({
           success: () => {
             MessageToast.show(
-              this.getResourceBundle().getText(
+              this.getI18nText(
                 sMode === "add" ? "addSuccessMessage" : "editSuccessMessage",
               ),
             );
@@ -250,6 +254,19 @@ sap.ui.define(
         const oItem = oEvent.getSource().getParent();
         const oContext = oItem.getBindingContext("odataV2");
         this.onOpenProductDialog("edit", oContext);
+      },
+
+      onFilterProducts: function (oEvent) {
+        const sQuery = oEvent.getParameter("newValue");
+        const oTable = this.byId("products_table_V2");
+        const oBinding = oTable.getBinding("items");
+
+        if (sQuery) {
+          const oFilter = new Filter("Name", FilterOperator.Contains, sQuery);
+          oBinding.filter(oFilter);
+          return;
+        }
+        oBinding.filter([]);
       },
     });
   },
