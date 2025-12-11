@@ -16,6 +16,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BaseController) {
       return this.getOwnerComponent().getModel("i18n").getResourceBundle();
     },
 
+    getI18nText: function(sText){
+      return this.getOwnerComponent().getModel("i18n").getResourceBundle().getText(sText);
+    },
+
     getMainModel: function () {
       return this.getView().getModel();
     },

@@ -6,7 +6,7 @@
     core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
     <Table
-        id="productsTableV2"
+        id="products_table_V2"
         items="{
             path: 'odataV2>/Products'
         }"
@@ -22,7 +22,6 @@
                     text="{i18n>productsTitle}"
                     level="H2"
                 />
-                <ToolbarSpacer id="product_table_toolbar_spacerV2" />
 
                 <Button
                     id="add_product_button"
@@ -38,6 +37,15 @@
                     press=".onDeleteProducts"
                     enabled="{= ${view>/selectedRows}.length > 0}"
                 />
+                <ToolbarSpacer id="product_table_toolbar_spacerV2" />
+
+                <Input
+                    id="search_product_input"
+                    width="20rem"
+                    placeholder="{i18n>searchProductPlaceholder}"
+                    liveChange=".onFilterProducts"
+                />
+
 
             </OverflowToolbar>
         </headerToolbar>
