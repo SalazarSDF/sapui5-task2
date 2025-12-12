@@ -106,14 +106,50 @@
       "routes": [
         {
           "name": "RouteMain",
-          "pattern": ":?query:",
-          "target": ["TargetMain"]
+          "pattern": "",
+          "target": "TargetMain"
+        },
+        {
+          "name": "jsonTab",
+          "pattern": "tab/json",
+          "target": ["TargetMain", "TargetJSON"]
+        },
+        {
+          "name": "odataV2Tab",
+          "pattern": "tab/odataV2",
+          "target": ["TargetMain", "TargetODataV2"]
+        },
+        {
+          "name": "odataV4Tab",
+          "pattern": "tab/odataV4",
+          "target": ["TargetMain", "TargetODataV4"]
         }
       ],
       "targets": {
         "TargetMain": {
-          "id": "Main",
-          "name": "Main"
+          "name": "Main",
+          "id": "Main"
+        },
+        "TargetJSON": {
+          "parent": "TargetMain",
+          "name": "JSON",
+          "id": "JSONView",
+          "controlId": "jsonTab",
+          "controlAggregation": "content"
+        },
+        "TargetODataV2": {
+          "parent": "TargetMain",
+          "name": "oDataV2",
+          "id": "oDataV2View",
+          "controlId": "odataTabV2",
+          "controlAggregation": "content"
+        },
+        "TargetODataV4": {
+          "parent": "TargetMain",
+          "name": "oDataV4",
+          "id": "oDataV4View",
+          "controlId": "odataTabV4",
+          "controlAggregation": "content"
         }
       }
     },

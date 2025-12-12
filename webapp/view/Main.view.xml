@@ -1,4 +1,5 @@
 <mvc:View
+    controllerName="sapui5task2.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
@@ -8,40 +9,23 @@
         title="{i18n>title}"
     >
         <content>
-            <IconTabBar id="iconTabBar">
+            <IconTabBar id="iconTabBar" select=".onTabSelect">
                 <items>
                     <IconTabFilter
                         id="jsonTab"
                         key="json"
                         text="{i18n>JSONModel}"
-                    >
-                        <mvc:XMLView
-                            id="JSONView"
-                            viewName="sapui5task2.view.JSON"
-                        />
-                    </IconTabFilter>
-
+                    />
                     <IconTabFilter
                         id="odataTabV2"
-                        key="odata"
+                        key="odataV2"
                         text="{i18n>oDataV2Model}"
-                    >
-                        <mvc:XMLView
-                            id="oDataV2View"
-                            viewName="sapui5task2.view.oDataV2"
-                        />
-                    </IconTabFilter>
-
+                    />
                     <IconTabFilter
                         id="odataTabV4"
-                        key="odata"
+                        key="odataV4"
                         text="{i18n>oDataV4Model}"
-                    >
-                        <mvc:XMLView
-                            id="oDataV4View"
-                            viewName="sapui5task2.view.oDataV4"
-                        />
-                    </IconTabFilter>
+                    />
                 </items>
             </IconTabBar>
         </content>

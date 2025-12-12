@@ -2,7 +2,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BaseController) {
   "use strict";
 
   return BaseController.extend("sapui5task2.controller.BaseController", {
-    onInit: function () { },
+    onInit: function () {},
 
     getModel: function (sName) {
       return this.getView().getModel(sName);
@@ -16,8 +16,11 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BaseController) {
       return this.getOwnerComponent().getModel("i18n").getResourceBundle();
     },
 
-    getI18nText: function(sText){
-      return this.getOwnerComponent().getModel("i18n").getResourceBundle().getText(sText);
+    getI18nText: function (sText) {
+      return this.getOwnerComponent()
+        .getModel("i18n")
+        .getResourceBundle()
+        .getText(sText);
     },
 
     getMainModel: function () {
@@ -26,6 +29,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller"], function (BaseController) {
 
     setMainModel: function (oModel) {
       return this.getView().setModel(oModel);
+    },
+
+    getRouter: function () {
+      return this.getOwnerComponent().getRouter();
     },
   });
 });
