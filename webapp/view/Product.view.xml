@@ -4,15 +4,127 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
+    xmlns:uxap="sap.uxap"
     core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
-    <Page
+    <uxap:ObjectPageLayout
         id="productPage"
-        title="{odataV2>Name}"
-        showNavButton="true"
-        navButtonPress=".onNavBack"
+        showTitleInHeaderContent="true"
     >
-        <content>
-        </content>
-    </Page>
+        <uxap:headerTitle>
+            <uxap:ObjectPageHeader
+                objectTitle="{odataV2>Name}"
+            >
+                <uxap:actions>
+                    <Button
+                        icon="sap-icon://nav-back"
+                        press=".onNavBack"
+                        tooltip="{i18n>navBackButton}"
+                    />
+                </uxap:actions>
+            </uxap:ObjectPageHeader>
+        </uxap:headerTitle>
+        <uxap:sections>
+            <uxap:ObjectPageSection title="{i18n>productDetailsSection}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <f:SimpleForm
+                            id="productForm"
+                            editable="false"
+                            layout="ResponsiveGridLayout"
+                        >
+                            <f:content>
+                                <Label text="{i18n>productNameColumn}" />
+                                <Text text="{odataV2>Name}" />
+
+                                <Label text="{i18n>productDescriptionColumn}" />
+                                <Text text="{odataV2>Description}" />
+
+                                <Label text="{i18n>productReleaseDateColumn}" />
+                                <Text
+                                    text="{
+                                        path: 'odataV2>ReleaseDate',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: { pattern: 'yyyy-MM-dd' }
+                                    }"
+                                />
+
+                                <Label text="{i18n>productDiscontinuedDateColumn}" />
+                                <Text
+                                    text="{
+                                        path: 'odataV2>DiscontinuedDate',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: { pattern: 'yyyy-MM-dd' }
+                                    }"
+                                />
+
+                                <Label text="{i18n>productRatingColumn}" />
+                                <RatingIndicator
+                                    value="{odataV2>Rating}"
+                                    editable="false"
+                                    enabled="false"
+                                    iconSize="16px"
+                                    maxValue="5"
+                                />
+
+                                <Label text="{i18n>productPriceColumn}" />
+                                <ObjectNumber
+                                    number="{
+                                        path: 'odataV2>Price',
+                                        type: 'FloatType',
+                                        formatOptions: { minIntegerDigits: 2 }
+                                    }"
+                                />
+                            </f:content>
+                        </f:SimpleForm>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection title="{i18n>supplierSection}">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <Table id="supplierTable">
+                            <headerToolbar>
+                                <Toolbar>
+                                    <Title text="{i18n>supplierTableTitle}" />
+                                </Toolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>supplierNameColumn}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>supplierStreetColumn}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>supplierCityColumn}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>supplierStateColumn}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>supplierZipCodeColumn}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>supplierCountryColumn}" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{odataV2>Supplier/Name}" />
+                                        <Text text="{odataV2>Supplier/Address/Street}" />
+                                        <Text text="{odataV2>Supplier/Address/City}" />
+                                        <Text text="{odataV2>Supplier/Address/State}" />
+                                        <Text text="{odataV2>Supplier/Address/ZipCode}" />
+                                        <Text text="{odataV2>Supplier/Address/Country}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
 </mvc:View>

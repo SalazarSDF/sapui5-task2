@@ -18,6 +18,9 @@ sap.ui.define(
         this.getView().bindElement({
           path: `/Products(${sProductID})`,
           model: "odataV2",
+          parameters: {
+            expand: "Supplier",
+          },
         });
       },
 
