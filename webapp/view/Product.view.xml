@@ -1,0 +1,18 @@
+<mvc:View
+    controllerName="sapui5task2.controller.Product"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    core:require="{FloatType: 'sap/ui/model/type/Float'}"
+>
+    <Page
+        id="productPage"
+        title="{odataV2>Name}"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+    >
+        <content>
+        </content>
+    </Page>
+</mvc:View>
