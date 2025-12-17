@@ -123,6 +123,11 @@
           "name": "odataV4Tab",
           "pattern": "tab/odataV4",
           "target": ["TargetMain", "TargetODataV4"]
+        },
+        {
+          "name": "productDetail",
+          "pattern": "Product/{ProductID}",
+          "target": ["TargetProduct"]
         }
       ],
       "targets": {
@@ -150,6 +155,10 @@
           "id": "oDataV4View",
           "controlId": "odataTabV4",
           "controlAggregation": "content"
+        },
+        "TargetProduct": {
+          "id": "Product",
+          "name": "Product"
         }
       }
     },

@@ -17,7 +17,7 @@ sap.ui.define(
     productV2Types,
     Filter,
     FilterOperator,
-    Sorter
+    Sorter,
   ) => {
     "use strict";
     return BaseController.extend("sapui5task2.controller.oDataV2", {
@@ -298,6 +298,13 @@ sap.ui.define(
         const oBinding = oTable.getBinding("items");
         const oSorter = new Sorter(sSelectedKey, true);
         oBinding.sort(oSorter);
+      },
+
+      onItemPress: function (oEvent) {
+        const oItem = oEvent.getSource();
+        const oContext = oItem.getBindingContext("odataV2");
+        const sProductID = oContext.getProperty("ID");
+        this.getRouter().navTo("productDetail", { ProductID: sProductID });
       },
     });
   },

@@ -105,7 +105,7 @@
 
         </columns>
         <items>
-            <ColumnListItem id="product_column_list_itemV2">
+            <ColumnListItem id="product_column_list_itemV2" press=".onItemPress" type="Navigation">
                 <cells>
                     <Text
                         id="product_cell_nameV2"
