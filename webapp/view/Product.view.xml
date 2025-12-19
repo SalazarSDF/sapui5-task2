@@ -5,11 +5,11 @@
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
     xmlns:uxap="sap.uxap"
+    xmlns:smart="sap.ui.comp.smarttable"
     core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
     <uxap:ObjectPageLayout
         id="productPage"
-        showTitleInHeaderContent="true"
     >
         <uxap:headerTitle>
             <uxap:ObjectPageHeader
@@ -18,7 +18,6 @@
                 <uxap:actions>
                     <Button
                         icon="sap-icon://nav-back"
-                        press=".onNavBack"
                         tooltip="{i18n>navBackButton}"
                     />
                 </uxap:actions>
@@ -80,51 +79,27 @@
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>
+
             <uxap:ObjectPageSection title="{i18n>supplierSection}">
                 <uxap:subSections>
                     <uxap:ObjectPageSubSection>
-                        <Table id="supplierTable">
-                            <headerToolbar>
-                                <Toolbar>
-                                    <Title text="{i18n>supplierTableTitle}" />
-                                </Toolbar>
-                            </headerToolbar>
-                            <columns>
-                                <Column>
-                                    <Text text="{i18n>supplierNameColumn}" />
-                                </Column>
-                                <Column>
-                                    <Text text="{i18n>supplierStreetColumn}" />
-                                </Column>
-                                <Column>
-                                    <Text text="{i18n>supplierCityColumn}" />
-                                </Column>
-                                <Column>
-                                    <Text text="{i18n>supplierStateColumn}" />
-                                </Column>
-                                <Column>
-                                    <Text text="{i18n>supplierZipCodeColumn}" />
-                                </Column>
-                                <Column>
-                                    <Text text="{i18n>supplierCountryColumn}" />
-                                </Column>
-                            </columns>
-                            <items>
-                                <ColumnListItem>
-                                    <cells>
-                                        <Text text="{odataV2>Supplier/Name}" />
-                                        <Text text="{odataV2>Supplier/Address/Street}" />
-                                        <Text text="{odataV2>Supplier/Address/City}" />
-                                        <Text text="{odataV2>Supplier/Address/State}" />
-                                        <Text text="{odataV2>Supplier/Address/ZipCode}" />
-                                        <Text text="{odataV2>Supplier/Address/Country}" />
-                                    </cells>
-                                </ColumnListItem>
-                            </items>
-                        </Table>
+                        <smart:SmartTable
+                            id="supplierTable"
+                            entitySet="Suppliers"
+                            header="{i18n>supplierTableTitle}"
+                            initiallyVisibleFields="Name,Street,City,State,ZipCode,Country"
+                            ignoredFields="ID,Concurrency"
+                            smartFilterId="supplierSmartFilter"
+                            useExportToExcel="false"
+                            useVariantManagement="false"
+                            useTablePersonalisation="true"
+                            showRowCount="true"
+                        />
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>
+
+
         </uxap:sections>
     </uxap:ObjectPageLayout>
 </mvc:View>

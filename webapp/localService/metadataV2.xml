@@ -24,14 +24,18 @@
 <NavigationProperty Name="Products" Relationship="ODataDemo.Product_Category_Category_Products" ToRole="Product_Category" FromRole="Category_Products" />
 </EntityType>
 <EntityType Name="Supplier">
-<Key>
-<PropertyRef Name="ID" />
-</Key>
-<Property Name="ID" Type="Edm.Int32" Nullable="false" />
-<Property Name="Name" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
-<Property Name="Address" Type="ODataDemo.Address" Nullable="false" />
-<Property Name="Concurrency" Type="Edm.Int32" ConcurrencyMode="Fixed" Nullable="false" />
-<NavigationProperty Name="Products" Relationship="ODataDemo.Product_Supplier_Supplier_Products" ToRole="Product_Supplier" FromRole="Supplier_Products" />
+    <Key>
+        <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Name" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
+    <Property Name="Street" Type="Edm.String" />
+    <Property Name="City" Type="Edm.String" />
+    <Property Name="State" Type="Edm.String" />
+    <Property Name="ZipCode" Type="Edm.String" />
+    <Property Name="Country" Type="Edm.String" />
+    <Property Name="Concurrency" Type="Edm.Int32" ConcurrencyMode="Fixed" Nullable="false" />
+    <NavigationProperty Name="Products" Relationship="ODataDemo.Product_Supplier_Supplier_Products" ToRole="Product_Supplier" FromRole="Supplier_Products" />
 </EntityType>
 <ComplexType Name="Address">
 <Property Name="Street" Type="Edm.String" />

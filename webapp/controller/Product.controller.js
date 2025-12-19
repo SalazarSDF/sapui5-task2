@@ -1,5 +1,7 @@
 sap.ui.define(
-  ["sapui5task2/controller/BaseController"],
+  [
+    "sapui5task2/controller/BaseController",
+  ],
   function (BaseController) {
     "use strict";
 
@@ -8,6 +10,9 @@ sap.ui.define(
         if (BaseController.prototype.onInit) {
           BaseController.prototype.onInit.apply(this, arguments);
         }
+
+        this.getView().setModel(this.getOwnerComponent().getModel("odataV2"));
+
         this.getRouter()
           .getRoute("productDetail")
           .attachPatternMatched(this._onObjectMatched, this);
@@ -22,10 +27,7 @@ sap.ui.define(
             expand: "Supplier",
           },
         });
-      },
-
-      onNavBack: function () {
-        this.getRouter().navTo("odataV2Tab");
+        this.byId("supplierTable").rebindTable();
       },
     });
   },
