@@ -52,10 +52,12 @@
                     change=".onSortChange"
                     items="{path: 'view>/sortOptions'}"
                 >
-                <core:Item key="{view>key}" text="{view>text}" />
+                    <core:Item
+                        id="sort_item_options"
+                        key="{view>key}"
+                        text="{view>text}"
+                    />
                 </ComboBox>
-
-
             </OverflowToolbar>
         </headerToolbar>
         <columns>
@@ -102,10 +104,13 @@
                     text="{i18n>productActionsColumn}"
                 />
             </Column>
-
         </columns>
         <items>
-            <ColumnListItem id="product_column_list_itemV2" press=".onItemPress" type="Navigation">
+            <ColumnListItem
+                id="product_column_list_itemV2"
+                press=".onItemPress"
+                type="Navigation"
+            >
                 <cells>
                     <Text
                         id="product_cell_nameV2"
@@ -148,8 +153,8 @@
                             path: 'odataV2>Price',
                             type: 'FloatType',
                             formatOptions: {
-					                      minIntegerDigits: 2
-				                    }
+					            minIntegerDigits: 2
+				            }
                         }"
                     />
                     <Button

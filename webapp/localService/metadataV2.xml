@@ -49,7 +49,7 @@
 <End Type="ODataDemo.Product" Role="Product_Category" Multiplicity="*" />
 </Association>
 <Association Name="Product_Supplier_Supplier_Products">
-<End Type="ODataDemo.Supplier" Role="Supplier_Products" Multiplicity="0..1" />
+<End Type="ODataDemo.Supplier" Role="Supplier_Products" Multiplicity="*" />
 <End Type="ODataDemo.Product" Role="Product_Supplier" Multiplicity="*" />
 </Association>
 <EntityContainer Name="DemoService" m:IsDefaultEntityContainer="true">

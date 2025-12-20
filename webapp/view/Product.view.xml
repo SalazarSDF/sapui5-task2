@@ -8,39 +8,50 @@
     xmlns:smart="sap.ui.comp.smarttable"
     core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
-    <uxap:ObjectPageLayout
-        id="productPage"
-    >
+    <uxap:ObjectPageLayout id="productPageV2">
         <uxap:headerTitle>
             <uxap:ObjectPageHeader
+                id="productHeaderV2"
                 objectTitle="{odataV2>Name}"
-            >
-                <uxap:actions>
-                    <Button
-                        icon="sap-icon://nav-back"
-                        tooltip="{i18n>navBackButton}"
-                    />
-                </uxap:actions>
-            </uxap:ObjectPageHeader>
+            />
         </uxap:headerTitle>
         <uxap:sections>
-            <uxap:ObjectPageSection title="{i18n>productDetailsSection}">
+            <uxap:ObjectPageSection
+                id="productPageSection1"
+                title="{i18n>productDetailsSection}"
+            >
                 <uxap:subSections>
-                    <uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection id="productPageSubSection1V2">
                         <f:SimpleForm
                             id="productForm"
                             editable="false"
                             layout="ResponsiveGridLayout"
                         >
                             <f:content>
-                                <Label text="{i18n>productNameColumn}" />
-                                <Text text="{odataV2>Name}" />
-
-                                <Label text="{i18n>productDescriptionColumn}" />
-                                <Text text="{odataV2>Description}" />
-
-                                <Label text="{i18n>productReleaseDateColumn}" />
+                                <Label
+                                    id="productNameLabelV2"
+                                    text="{i18n>productNameColumn}"
+                                />
                                 <Text
+                                    id="productNameTextV2"
+                                    text="{odataV2>Name}"
+                                />
+
+                                <Label
+                                    id="productDescriptionLabelV2"
+                                    text="{i18n>productDescriptionColumn}"
+                                />
+                                <Text
+                                    id="productDescriptionTextV2"
+                                    text="{odataV2>Description}"
+                                />
+
+                                <Label
+                                    id="productReleaseLabelV2"
+                                    text="{i18n>productReleaseDateColumn}"
+                                />
+                                <Text
+                                    id="productReleaseTextV2"
                                     text="{
                                         path: 'odataV2>ReleaseDate',
                                         type: 'sap.ui.model.type.Date',
@@ -48,8 +59,12 @@
                                     }"
                                 />
 
-                                <Label text="{i18n>productDiscontinuedDateColumn}" />
+                                <Label
+                                    id="productDiscountedDateLabelV2"
+                                    text="{i18n>productDiscontinuedDateColumn}"
+                                />
                                 <Text
+                                    id="productDiscountedDateTextV2"
                                     text="{
                                         path: 'odataV2>DiscontinuedDate',
                                         type: 'sap.ui.model.type.Date',
@@ -57,8 +72,12 @@
                                     }"
                                 />
 
-                                <Label text="{i18n>productRatingColumn}" />
+                                <Label
+                                    id="productRatingIndicatorLabelV2"
+                                    text="{i18n>productRatingColumn}"
+                                />
                                 <RatingIndicator
+                                    id="productRatingIndicatorV2"
                                     value="{odataV2>Rating}"
                                     editable="false"
                                     enabled="false"
@@ -66,8 +85,12 @@
                                     maxValue="5"
                                 />
 
-                                <Label text="{i18n>productPriceColumn}" />
+                                <Label
+                                    id="productPriceLabelV2"
+                                    text="{i18n>productPriceColumn}"
+                                />
                                 <ObjectNumber
+                                    id="productPriceV2"
                                     number="{
                                         path: 'odataV2>Price',
                                         type: 'FloatType',
@@ -79,18 +102,18 @@
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>
-
-            <uxap:ObjectPageSection title="{i18n>supplierSection}">
+            <uxap:ObjectPageSection
+                id="productPageSection2"
+                title="{i18n>supplierSection}"
+            >
                 <uxap:subSections>
-                    <uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection id="productPageSubSection2V2">
                         <smart:SmartTable
                             id="supplierTable"
                             entitySet="Suppliers"
+                            tableType="ResponsiveTable"
                             header="{i18n>supplierTableTitle}"
                             initiallyVisibleFields="Name,Street,City,State,ZipCode,Country"
-                            ignoredFields="ID,Concurrency"
-                            smartFilterId="supplierSmartFilter"
-                            useExportToExcel="false"
                             useVariantManagement="false"
                             useTablePersonalisation="true"
                             showRowCount="true"
@@ -98,8 +121,6 @@
                     </uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>
-
-
         </uxap:sections>
     </uxap:ObjectPageLayout>
 </mvc:View>
