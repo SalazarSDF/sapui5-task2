@@ -61,35 +61,37 @@ sap.ui.define(
           });
       },
 
-      onOpenProductDialog: async function () {
+      onOpenProductDialog: async function (sMode = "add", oContext = null) {
         this.oProductDialog ??= await this.loadFragment({
           name: "sapui5task2.fragments.ProductDialogV4",
         });
-        //        const oListBinding = this.byId("products_table_V4").getBinding("items");
 
         const oModel = this.getModel("odataV4");
-        const oCreateBinding = oModel.bindList(
-          "/Products",
-          undefined,
-          undefined,
-          undefined,
-          {
-            $$updateGroupId: "createGroup",
-          },
-        );
-        const oInitialProperties = {
-          Name: "",
-          Description: "",
-          ReleaseDate: null,
-          DiscontinuedDate: null,
-          Rating: 2,
-          Price: 0.0,
-        };
+        if (sMode === "add") {
+          const oCreateBinding = oModel.bindList(
+            "/Products",
+            undefined,
+            undefined,
+            undefined,
+            {
+              $$updateGroupId: "createGroup",
+            },
+          );
+          const oInitialProperties = {
+            Name: "",
+            Description: "",
+            ReleaseDate: null,
+            DiscontinuedDate: null,
+            Rating: 2,
+            Price: 0.0,
+          };
+          oContext = await oCreateBinding.create(oInitialProperties);
+        }
 
-        const oNewContext = await oCreateBinding.create(oInitialProperties);
+        this.oProductDialog.setBindingContext(oContext, "odataV4");
 
-        this.oProductDialog.setBindingContext(oNewContext, "odataV4");
         const oDialogProduct = new JSONModel({
+          mode: sMode,
           validation: {
             Name: { errorMessage: "", isTouched: false },
             Description: { errorMessage: "", isTouched: false },
@@ -195,6 +197,7 @@ sap.ui.define(
           Object.keys(errors).length === 0,
         );
       },
+
       onConfirmProduct: function () {
         this.onValidateForm(null, true);
         const oDialogModel = this.oProductDialog.getModel("dialogProduct");
@@ -202,30 +205,54 @@ sap.ui.define(
           MessageBox.error(this.getI18nText("saveFailedMessage"));
           return;
         }
+        const sMode = oDialogModel.getProperty("/mode");
         const oContext = this.oProductDialog.getBindingContext("odataV4");
         const oModel = this.getModel("odataV4");
-        const oListBinding = this.byId("products_table_V4").getBinding("items")
+        const oListBinding = this.byId("products_table_V4").getBinding("items");
+
+        const sBatchGroup = sMode === "add" ? "createGroup" : "editGroup";
 
         oModel
-          .submitBatch("createGroup")
+          .submitBatch(sBatchGroup)
           .then(() => {
-            MessageToast.show(this.getI18nText("addSuccessMessage"));
+            MessageToast.show(
+              this.getI18nText(
+                sMode === "add" ? "addSuccessMessage" : "editSuccessMessage",
+              ),
+            );
             this.onCloseProductDialog();
             oListBinding.refresh();
           })
           .catch((oError) => {
-            oContext.delete("createGroup");
+            if (sMode === "add" && oContext.created() !== undefined) {
+              oContext.delete(sBatchGroup);
+            }
             MessageBox.error(
-              this.getI18nText("addFailedMessage") + ": " + oError.message,
+              this.getI18nText(
+                sMode === "add" ? "addFailedMessage" : "editFailedMessage",
+              ) +
+                ": " +
+                oError.message,
             );
           });
       },
       onCloseProductDialog: function () {
         const oContext = this.oProductDialog.getBindingContext("odataV4");
-        if (oContext.created() !== undefined) {
+        const oDialogModel = this.oProductDialog.getModel("dialogProduct");
+        const sMode = oDialogModel.getProperty("/mode");
+
+        if (sMode === "add" && oContext.created() !== undefined) {
           oContext.delete("createGroup");
+        } else if (sMode == "edit") {
+          oContext.resetChanges();
         }
         this.oProductDialog.close();
+      },
+
+      onEditProduct: function (oEvent) {
+        const oItem = oEvent.getSource().getParent();
+        const oContext = oItem.getBindingContext("odataV4");
+        this.onOpenProductDialog("edit", oContext);
       },
     });
   },
