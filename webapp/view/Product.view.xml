@@ -4,15 +4,123 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:f="sap.ui.layout.form"
+    xmlns:uxap="sap.uxap"
+    xmlns:smart="sap.ui.comp.smarttable"
     core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
-    <Page
-        id="productPage"
-        title="{odataV2>Name}"
-        showNavButton="true"
-        navButtonPress=".onNavBack"
-    >
-        <content>
-        </content>
-    </Page>
+    <uxap:ObjectPageLayout id="productPageV2">
+        <uxap:headerTitle>
+            <uxap:ObjectPageHeader
+                id="productHeaderV2"
+                objectTitle="{odataV2>Name}"
+            />
+        </uxap:headerTitle>
+        <uxap:sections>
+            <uxap:ObjectPageSection
+                id="productPageSection1"
+                title="{i18n>productDetailsSection}"
+            >
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection id="productPageSubSection1V2">
+                        <f:SimpleForm
+                            id="productForm"
+                            editable="false"
+                            layout="ResponsiveGridLayout"
+                        >
+                            <f:content>
+                                <Label
+                                    id="productNameLabelV2"
+                                    text="{i18n>productNameColumn}"
+                                />
+                                <Text
+                                    id="productNameTextV2"
+                                    text="{odataV2>Name}"
+                                />
+
+                                <Label
+                                    id="productDescriptionLabelV2"
+                                    text="{i18n>productDescriptionColumn}"
+                                />
+                                <Text
+                                    id="productDescriptionTextV2"
+                                    text="{odataV2>Description}"
+                                />
+
+                                <Label
+                                    id="productReleaseLabelV2"
+                                    text="{i18n>productReleaseDateColumn}"
+                                />
+                                <Text
+                                    id="productReleaseTextV2"
+                                    text="{
+                                        path: 'odataV2>ReleaseDate',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: { pattern: 'yyyy-MM-dd' }
+                                    }"
+                                />
+
+                                <Label
+                                    id="productDiscountedDateLabelV2"
+                                    text="{i18n>productDiscontinuedDateColumn}"
+                                />
+                                <Text
+                                    id="productDiscountedDateTextV2"
+                                    text="{
+                                        path: 'odataV2>DiscontinuedDate',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: { pattern: 'yyyy-MM-dd' }
+                                    }"
+                                />
+
+                                <Label
+                                    id="productRatingIndicatorLabelV2"
+                                    text="{i18n>productRatingColumn}"
+                                />
+                                <RatingIndicator
+                                    id="productRatingIndicatorV2"
+                                    value="{odataV2>Rating}"
+                                    editable="false"
+                                    enabled="false"
+                                    iconSize="16px"
+                                    maxValue="5"
+                                />
+
+                                <Label
+                                    id="productPriceLabelV2"
+                                    text="{i18n>productPriceColumn}"
+                                />
+                                <ObjectNumber
+                                    id="productPriceV2"
+                                    number="{
+                                        path: 'odataV2>Price',
+                                        type: 'FloatType',
+                                        formatOptions: { minIntegerDigits: 2 }
+                                    }"
+                                />
+                            </f:content>
+                        </f:SimpleForm>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection
+                id="productPageSection2"
+                title="{i18n>supplierSection}"
+            >
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection id="productPageSubSection2V2">
+                        <smart:SmartTable
+                            id="supplierTable"
+                            entitySet="Suppliers"
+                            tableType="ResponsiveTable"
+                            header="{i18n>supplierTableTitle}"
+                            initiallyVisibleFields="Name,Street,City,State,ZipCode,Country"
+                            useVariantManagement="false"
+                            useTablePersonalisation="true"
+                            showRowCount="true"
+                        />
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+        </uxap:sections>
+    </uxap:ObjectPageLayout>
 </mvc:View>
