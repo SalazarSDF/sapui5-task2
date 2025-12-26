@@ -6,7 +6,7 @@
     core:require="{FloatType: 'sap/ui/model/type/Float'}"
 >
     <Table
-        id="productsTable"
+        id="products_table_V4"
         items="{
             path: 'odataV4>/Products'
         }"
@@ -22,6 +22,14 @@
                     text="{i18n>productsTitle}"
                     level="H2"
                 />
+
+                <Button
+                    id="add_product_button"
+                    icon="sap-icon://add"
+                    text="{i18n>addRecordButton}"
+                    press=".onOpenProductDialog('add')"
+                />
+
                 <Button
                     id="delete_button"
                     icon="sap-icon://delete"
