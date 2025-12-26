@@ -125,7 +125,6 @@ sap.ui.define(
         });
         this.oProductDialog.setModel(oDialogProduct, "dialogProduct");
         this.oProductDialog.open();
-        this.onValidateForm();
       },
 
       onValidateForm: function (oEvent, bForce) {
