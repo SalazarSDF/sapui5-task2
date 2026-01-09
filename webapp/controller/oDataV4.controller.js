@@ -224,7 +224,7 @@ sap.ui.define(
             oListBinding.refresh();
           })
           .catch((oError) => {
-            if (sMode === "add" ) {
+            if (sMode === "add" && oContext.created() !== undefined) {
               oContext.delete(sBatchGroup);
             }
             MessageBox.error(
@@ -241,7 +241,7 @@ sap.ui.define(
         const oDialogModel = this.oProductDialog.getModel("dialogProduct");
         const sMode = oDialogModel.getProperty("/mode");
 
-        if (sMode === "add") {
+        if (sMode === "add" && oContext.created() !== undefined) {
           oContext.delete("createGroup");
         } else if (sMode == "edit") {
           oContext.resetChanges();
