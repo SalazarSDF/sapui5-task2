@@ -61,13 +61,16 @@ sap.ui.define(
           });
       },
 
-      onOpenProductDialog: async function (sMode = "add", oContext = null) {
+      onOpenProductDialog: async function (oContext) {
         this.oProductDialog ??= await this.loadFragment({
           name: "sapui5task2.fragments.ProductDialogV4",
         });
 
         const oModel = this.getModel("odataV4");
-        if (sMode === "add") {
+
+        const bIsEdit = !!oContext;
+
+        if (!bIsEdit) {
           const oCreateBinding = oModel.bindList(
             "/Products",
             undefined,
@@ -86,12 +89,19 @@ sap.ui.define(
             Price: 0.0,
           };
           oContext = await oCreateBinding.create(oInitialProperties);
+
+          oContext.created().catch((oError) => {
+            if (oError.canceled) {
+              return;
+            }
+            console.error("Unexpected error in created promise:", oError);
+          });
         }
 
         this.oProductDialog.setBindingContext(oContext, "odataV4");
 
         const oDialogProduct = new JSONModel({
-          mode: sMode,
+          bIsEdit: bIsEdit,
           validation: {
             Name: { errorMessage: "", isTouched: false },
             Description: { errorMessage: "", isTouched: false },
@@ -205,31 +215,31 @@ sap.ui.define(
           MessageBox.error(this.getI18nText("saveFailedMessage"));
           return;
         }
-        const sMode = oDialogModel.getProperty("/mode");
+        const bIsEdit = oDialogModel.getProperty("/bIsEdit");
         const oContext = this.oProductDialog.getBindingContext("odataV4");
         const oModel = this.getModel("odataV4");
         const oListBinding = this.byId("products_table_V4").getBinding("items");
 
-        const sBatchGroup = sMode === "add" ? "createGroup" : "editGroup";
+        const sBatchGroup = bIsEdit ? "editGroup" : "createGroup";
 
         oModel
           .submitBatch(sBatchGroup)
           .then(() => {
             MessageToast.show(
               this.getI18nText(
-                sMode === "add" ? "addSuccessMessage" : "editSuccessMessage",
+                bIsEdit ? "editSuccessMessage" : "addSuccessMessage",
               ),
             );
             this.onCloseProductDialog();
             oListBinding.refresh();
           })
           .catch((oError) => {
-            if (sMode === "add" && oContext.created() !== undefined) {
+            if (!bIsEdit) {
               oContext.delete(sBatchGroup);
             }
             MessageBox.error(
               this.getI18nText(
-                sMode === "add" ? "addFailedMessage" : "editFailedMessage",
+                bIsEdit ? "editFailedMessage" : "addFailedMessage",
               ) +
                 ": " +
                 oError.message,
@@ -239,11 +249,11 @@ sap.ui.define(
       onCloseProductDialog: function () {
         const oContext = this.oProductDialog.getBindingContext("odataV4");
         const oDialogModel = this.oProductDialog.getModel("dialogProduct");
-        const sMode = oDialogModel.getProperty("/mode");
+        const bIsEdit = oDialogModel.getProperty("/bIsEdit");
 
-        if (sMode === "add" && oContext.created() !== undefined) {
+        if (!bIsEdit) {
           oContext.delete("createGroup");
-        } else if (sMode == "edit") {
+        } else if (bIsEdit) {
           oContext.resetChanges();
         }
         this.oProductDialog.close();
@@ -252,7 +262,7 @@ sap.ui.define(
       onEditProduct: function (oEvent) {
         const oItem = oEvent.getSource().getParent();
         const oContext = oItem.getBindingContext("odataV4");
-        this.onOpenProductDialog("edit", oContext);
+        this.onOpenProductDialog(oContext);
       },
     });
   },

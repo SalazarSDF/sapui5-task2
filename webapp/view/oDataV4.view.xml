@@ -30,7 +30,7 @@
                     id="add_product_button"
                     icon="sap-icon://add"
                     text="{i18n>addRecordButton}"
-                    press=".onOpenProductDialog('add')"
+                    press=".onOpenProductDialog()"
                 />
 
                 <Button
