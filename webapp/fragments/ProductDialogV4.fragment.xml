@@ -1,0 +1,140 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog
+        id="add_product_dialog_V4"
+        title="{= ${dialogProduct>/bIsEdit} ? ${i18n>editProductDialogTitle} : ${i18n>addProductDialogTitle} }"
+        type="Message"
+    >
+        <content>
+            <f:SimpleForm
+                id="add_product_form_V4"
+                editable="true"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="2"
+                columnsL="2"
+                columnsM="2"
+                singleContainerFullSize="false"
+            >
+                <f:content>
+                    <Label
+                        id="product_name_label_V4"
+                        text="{i18n>productNameLabel}"
+                        required="true"
+                    />
+                    <Input
+                        id="product_name_input_V4"
+                        value="{
+                            path: 'odataV4>Name'
+                        }"
+                        placeholder="{i18n>productNamePlaceholder}"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Name/errorMessage}"
+                    />
+                    <Label
+                        id="product_description_label_V4"
+                        text="{i18n>productDescriptionLabel}"
+                        required="true"
+                    />
+                    <TextArea
+                        id="product_description_input_V4"
+                        value="{
+                            path: 'odataV4>Description'
+                        }"
+                        placeholder="{i18n>productDescriptionPlaceholder}"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Description/errorMessage}"
+                    />
+                    <Label
+                        id="product_release_date_label_V4"
+                        text="{i18n>productReleaseDateLabel}"
+                        required="true"
+                    />
+                    <DatePicker
+                        id="product_release_date_picker_V4"
+                        value="{
+                            path: 'odataV4>ReleaseDate',
+                            type: 'sap.ui.model.odata.type.DateTimeOffset',
+                            constraints: { displayFormat: 'Date' }
+                        }"
+                        change=".onValidateForm"
+                        displayFormat="long"
+                        valueStateText="{dialogProduct>/validation/ReleaseDate/errorMessage}"
+                    />
+                    <Label
+                        id="product_discontinued_date_label_V4"
+                        text="{i18n>productDiscontinuedDateLabel}"
+                    />
+                    <DatePicker
+                        id="product_discontinued_date_picker_V4"
+                        value="{
+                            path: 'odataV4>DiscontinuedDate',
+                            type: 'sap.ui.model.odata.type.DateTimeOffset',
+                            constraints: { displayFormat: 'Date', nullable: true }
+                        }"
+                        change=".onValidateForm"
+                        displayFormat="long"
+                        valueStateText="{dialogProduct>/validation/DiscontinuedDate/errorMessage}"
+                    />
+                    <Label
+                        id="product_rating_label_V4"
+                        text="{i18n>productRatingLabel}"
+                        required="true"
+                    />
+                    <StepInput
+                        id="product_rating_input_V4"
+                        value="{
+                            path: 'odataV4>Rating'
+                        }"
+                        min="1"
+                        max="5"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Rating/errorMessage}"
+                    />
+                    <Label
+                        id="product_price_label_V4"
+                        text="{i18n>productPriceLabel}"
+                        required="true"
+                    />
+                    <Input
+                        id="product_price_input_V4"
+                        type="Number"
+                        value="{
+                            path: 'odataV4>Price'
+                        }"
+                        placeholder="{i18n>productPricePlaceholder}"
+                        change=".onValidateForm"
+                        valueStateText="{dialogProduct>/validation/Price/errorMessage}"
+                    />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <beginButton>
+            <Button
+                id="dialog_button_on_confirm_V4"
+                text="{= ${dialogProduct>/bIsEdit} ? ${i18n>saveButton} : ${i18n>addButton} }"
+                type="Emphasized"
+                press=".onConfirmProduct"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                id="dialog_button_on_cancel_V4"
+                text="{i18n>cancelButton}"
+                type="Default"
+                press=".onCloseProductDialog"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
