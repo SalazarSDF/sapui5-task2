@@ -5,7 +5,7 @@
 >
     <Dialog
         id="add_product_dialog_V4"
-        title="{= ${dialogProduct>/mode} === 'add' ? ${i18n>addProductDialogTitle} : ${i18n>editProductDialogTitle} }"
+        title="{= ${dialogProduct>/bIsEdit} ? ${i18n>editProductDialogTitle} : ${i18n>addProductDialogTitle} }"
         type="Message"
     >
         <content>
@@ -123,7 +123,7 @@
         <beginButton>
             <Button
                 id="dialog_button_on_confirm_V4"
-                text="{= ${dialogProduct>/mode} === 'add' ? ${i18n>addButton} : ${i18n>saveButton} }"
+                text="{= ${dialogProduct>/bIsEdit} ? ${i18n>saveButton} : ${i18n>addButton} }"
                 type="Emphasized"
                 press=".onConfirmProduct"
             />
